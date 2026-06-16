@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+results.jsonl
+adv_results.jsonl
+*.egg-info/
+.pytest_cache/
+
+# Local secrets / config (never commit)
+.env
+
+# Runtime artifacts
+telemetry.jsonl
+deadletter.jsonl
+audit.jsonl

@@ -1,0 +1,39 @@
+[project]
+name = "messaging-agent"
+version = "0.1.0"
+description = "Context-aware, data-driven messaging agent built on LangGraph"
+requires-python = ">=3.11"
+dependencies = [
+    "langgraph>=1.0",
+]
+
+[project.optional-dependencies]
+anthropic = ["anthropic>=0.40"]
+openai = ["openai>=1.40"]
+gemini = ["google-genai>=0.3"]
+prod = ["redis>=5.0", "kafka-python>=2.0", "psycopg[binary]>=3.1"]
+otel = [
+    "opentelemetry-sdk>=1.20",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.20",
+]
+langsmith = ["langsmith>=0.1"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+messaging-agent = "messaging_agent.cli:main"
+messaging-agent-eval = "messaging_agent.evals.cli:main"
+messaging-agent-runner = "messaging_agent.prod.runner:main"
+messaging-agent-worker = "messaging_agent.prod.worker:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "eval: live-LLM evaluation tests (require a provider key; deselect in CI with -m 'not eval')",
+]

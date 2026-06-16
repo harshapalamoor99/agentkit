@@ -1,0 +1,13 @@
+# Core orchestration
+langgraph==1.2.4
+
+# Optional LLM providers — install the one matching your API key.
+# The agent auto-detects the provider from environment variables.
+anthropic==0.109.1
+openai==2.41.1
+google-genai==2.8.0
+
+# Dev / test
+pytest==9.0.3
+fastapi>=0.110
+uvicorn>=0.27

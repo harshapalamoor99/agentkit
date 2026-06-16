@@ -1,0 +1,962 @@
+[
+  {
+    "task_id": "hard_0000_resident_dormant",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0001_resident_renewal",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0002_prospect_engaged",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0003_resident_engaged",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0004_resident_engaged",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0005_resident_dormant",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0006_applicant_open",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0007_applicant_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0008_prospect_engaged",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0009_prospect_engaged",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0010_resident_engaged",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0011_prospect_engaged",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0012_prospect_engaged",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0013_prospect_open",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0014_resident_engaged",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0015_prospect_engaged",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0016_applicant_open",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0017_applicant_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0018_prospect_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0019_resident_dormant",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0020_prospect_new",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0021_resident_engaged",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0022_resident_renewal",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0023_prospect_engaged",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0024_applicant_open",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0025_resident_dormant",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0026_applicant_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0027_prospect_new",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0028_applicant_open",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0029_resident_dormant",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0030_resident_engaged",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0031_resident_dormant",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0032_prospect_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0033_prospect_engaged",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0034_prospect_engaged",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0035_resident_dormant",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0036_resident_renewal",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0037_applicant_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0038_resident_renewal",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0039_resident_renewal",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0040_prospect_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0041_resident_dormant",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0042_prospect_engaged",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0043_resident_engaged",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0044_prospect_open",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0045_applicant_open",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0046_resident_renewal",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0047_resident_renewal",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0048_prospect_open",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0049_resident_renewal",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0050_resident_engaged",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0051_prospect_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0052_resident_renewal",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0053_resident_renewal",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0054_prospect_new",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0055_resident_dormant",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0056_prospect_engaged",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0057_applicant_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0058_prospect_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0059_resident_renewal",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0060_prospect_open",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0061_resident_engaged",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0062_applicant_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0063_applicant_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0064_resident_engaged",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0065_resident_engaged",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0066_resident_engaged",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0067_resident_renewal",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0068_resident_engaged",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0069_prospect_open",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0070_resident_renewal",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0071_prospect_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0072_resident_renewal",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0073_applicant_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0074_prospect_new",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0075_applicant_open",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0076_resident_engaged",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0077_resident_renewal",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0078_resident_engaged",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0079_prospect_engaged",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0080_resident_dormant",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0081_applicant_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0082_resident_dormant",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0083_resident_dormant",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0084_prospect_new",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0085_resident_renewal",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0086_resident_dormant",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0087_applicant_open",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0088_applicant_open",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0089_resident_renewal",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0090_applicant_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0091_prospect_new",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0092_resident_dormant",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0093_prospect_engaged",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0094_resident_engaged",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0095_prospect_engaged",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0096_applicant_open",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0097_prospect_open",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0098_prospect_new",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0099_prospect_new",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0100_resident_dormant",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0101_resident_engaged",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0102_prospect_engaged",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0103_prospect_new",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0104_prospect_open",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0105_prospect_open",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0106_applicant_open",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0107_prospect_engaged",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0108_resident_dormant",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0109_resident_engaged",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0110_applicant_open",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0111_applicant_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0112_prospect_new",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0113_resident_dormant",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0114_resident_dormant",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0115_applicant_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0116_prospect_new",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0117_prospect_open",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0118_prospect_open",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0119_resident_renewal",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0120_prospect_engaged",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0121_prospect_new",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0122_applicant_open",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0123_prospect_new",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0124_resident_engaged",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0125_resident_renewal",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0126_prospect_open",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0127_resident_engaged",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0128_applicant_open",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0129_applicant_open",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0130_resident_dormant",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0131_resident_renewal",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0132_prospect_open",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0133_prospect_open",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0134_resident_engaged",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0135_resident_engaged",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0136_prospect_engaged",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0137_prospect_new",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0138_resident_engaged",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0139_prospect_engaged",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0140_resident_engaged",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0141_resident_dormant",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0142_prospect_engaged",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0143_prospect_new",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0144_prospect_open",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0145_resident_renewal",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0146_resident_engaged",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0147_applicant_open",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0148_prospect_engaged",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0149_resident_renewal",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0150_applicant_open",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0151_prospect_new",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "start_cadence"
+  },
+  {
+    "task_id": "hard_0152_resident_dormant",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0153_applicant_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0154_prospect_open",
+    "should_send": true,
+    "channel": "voice",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0155_prospect_engaged",
+    "should_send": true,
+    "channel": "sms",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0156_resident_dormant",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0157_prospect_new",
+    "should_send": false,
+    "channel": null,
+    "next_action": "no_action"
+  },
+  {
+    "task_id": "hard_0158_applicant_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  },
+  {
+    "task_id": "hard_0159_prospect_open",
+    "should_send": true,
+    "channel": "email",
+    "next_action": "follow_up_in_days"
+  }
+]

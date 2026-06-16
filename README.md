@@ -2,7 +2,7 @@
 
 **A domain-pluggable LLM agent engine** — build production agents where the **LLM makes the decision** and code enforces only compliance. One LangGraph core, many domains.
 
-![CI](https://img.shields.io/badge/CI-passing-brightgreen)
+[![CI](https://github.com/harshapalamoor99/agentkit/actions/workflows/ci.yml/badge.svg)](https://github.com/harshapalamoor99/agentkit/actions/workflows/ci.yml)
 ![Tests](https://img.shields.io/badge/tests-193%20passed-brightgreen)
 ![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -36,9 +36,6 @@ are inherited for free.
 
 > Reading for review: start with **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)** for the
 > design decisions (ADR-style), then `docs/AUTHORING_A_DOMAIN.md` for the extensibility story.
-
-<!-- To enable the live CI badge after pushing to GitHub, replace the static CI badge above with:
-![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg) -->
 
 ### Quickstart
 

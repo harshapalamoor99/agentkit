@@ -8,8 +8,8 @@ for _k in ("LITELLM_API_KEY", "LITELLM_API_BASE", "LITELLM_MODEL",
            "GOOGLE_API_KEY", "GEMINI_API_KEY"):
     os.environ.pop(_k, None)
 
-import messaging_agent.nodes.llm as llmnode  # noqa: E402
-from messaging_agent.graph import app  # noqa: E402
+import agentkit.nodes.llm as llmnode  # noqa: E402
+from agentkit.graph import app  # noqa: E402
 
 DATA = os.path.join(os.path.dirname(__file__), "..", "data", "evals")
 
@@ -136,7 +136,7 @@ def test_clean_llm_output_marked_raw_compliant():
         available = True
 
         async def generate(self, system, user, **k):
-            from messaging_agent import timing
+            from agentkit import timing
             send_at = timing.compute_send_at(_rec(), "sms")
             return _valid_json(channel="sms", send_at=send_at)
 
@@ -150,7 +150,7 @@ def test_clean_llm_output_marked_raw_compliant():
 # --- G2: semantic match (embeddings with offline fallback) ------------------
 
 def test_semantic_score_lexical_method_offline():
-    from messaging_agent.evals import semantic
+    from agentkit.evals import semantic
     expected = {"next_message": {"channel": "sms", "body": "Book a tour today"},
                 "next_action": {"type": "no_action"}}
     s = asyncio.run(semantic.score_async(expected, expected, client=None))
@@ -159,7 +159,7 @@ def test_semantic_score_lexical_method_offline():
 
 
 def test_semantic_score_uses_embeddings_when_available():
-    from messaging_agent.evals import semantic
+    from agentkit.evals import semantic
 
     class FakeEmbedClient:
         available = True
@@ -181,7 +181,7 @@ def test_semantic_score_uses_embeddings_when_available():
 
 
 def test_cosine_basic():
-    from messaging_agent.evals.semantic import _cosine
+    from agentkit.evals.semantic import _cosine
     assert _cosine([1.0, 0.0], [1.0, 0.0]) == 1.0
     assert _cosine([1.0, 0.0], [0.0, 1.0]) == 0.0
 
@@ -189,7 +189,7 @@ def test_cosine_basic():
 # --- G6: broadened fair-housing + output PII --------------------------------
 
 def test_broadened_fair_housing_patterns():
-    from messaging_agent import safety_rules
+    from agentkit import safety_rules
     for phrase in ["perfect for a single Christian male",
                    "we prefer a young couple",
                    "no immigrants",
@@ -201,7 +201,7 @@ def test_broadened_fair_housing_patterns():
 
 
 def test_output_pii_detects_address_and_card():
-    from messaging_agent import safety_rules
+    from agentkit import safety_rules
     assert "street_address" in safety_rules.find_pii("Visit us at 1234 Oak Ridge Boulevard today")
     assert "credit_card" in safety_rules.find_pii("card 4111 1111 1111 1111 on file")
     assert safety_rules.find_pii("Book a tour this week!") == []
@@ -210,7 +210,7 @@ def test_output_pii_detects_address_and_card():
 # --- G6: runtime fair-housing judge gate ------------------------------------
 
 def test_fairness_gate_flags_high_confidence_violation():
-    from messaging_agent.evals import judge
+    from agentkit.evals import judge
 
     class ViolationClient:
         available = True
@@ -223,7 +223,7 @@ def test_fairness_gate_flags_high_confidence_violation():
 
 
 def test_fairness_gate_ignores_low_confidence_and_no_client():
-    from messaging_agent.evals import judge
+    from agentkit.evals import judge
 
     class LowConf:
         available = True
@@ -238,7 +238,7 @@ def test_fairness_gate_ignores_low_confidence_and_no_client():
 def test_runtime_judge_gate_forces_no_send(monkeypatch):
     """With the gate enabled, a fair-housing veto from the judge forces a safe no-send
     even though the generated message passed the regex floor."""
-    import messaging_agent.config as cfg
+    import agentkit.config as cfg
     monkeypatch.setattr(cfg, "RUNTIME_FAIRHOUSING_JUDGE", True)
 
     class GenThenVeto:
@@ -259,14 +259,14 @@ def test_runtime_judge_gate_forces_no_send(monkeypatch):
 # --- G7: geo timezone correctness ------------------------------------------
 
 def test_geo_hawaii_alaska_zip_mapping():
-    from messaging_agent import geo
+    from agentkit import geo
     assert geo.tz_from_zip("96801") == "Pacific/Honolulu"   # Honolulu, HI
     assert geo.tz_from_zip("99501") == "America/Anchorage"  # Anchorage, AK
     assert geo.tz_from_zip("90001") == "America/Los_Angeles"  # LA still Pacific
 
 
 def test_geo_non_us_not_assumed_us_timezone():
-    from messaging_agent import geo
+    from agentkit import geo
     rec = {"input": {"country": "United Kingdom", "zip_code": "90001"}}
     zone, source = geo.resolve_timezone(rec)
     assert zone is None and source == "none"  # don't guess a US zone for a UK prospect
@@ -279,7 +279,7 @@ def test_geo_non_us_not_assumed_us_timezone():
 # --- G8: per-key circuit breaker isolation ----------------------------------
 
 def test_breaker_isolated_per_key():
-    import messaging_agent.circuit_breaker as cb
+    import agentkit.circuit_breaker as cb
     cb.reset_all()
     a = cb.get_breaker("litellm", "tenant_a")
     b = cb.get_breaker("litellm", "tenant_b")
@@ -293,7 +293,7 @@ def test_breaker_isolated_per_key():
 
 
 def test_breaker_default_when_no_key():
-    import messaging_agent.circuit_breaker as cb
+    import agentkit.circuit_breaker as cb
     assert cb.get_breaker() is cb.breaker
 
 
@@ -301,7 +301,7 @@ def test_breaker_default_when_no_key():
 
 def test_unjustified_no_send_is_flagged(monkeypatch):
     events = []
-    import messaging_agent.telemetry as telemetry
+    import agentkit.telemetry as telemetry
     monkeypatch.setattr(telemetry.store, "emit_event",
                         lambda t, p: events.append((t, p)) or {})
 
@@ -338,8 +338,8 @@ def test_justified_no_send_not_flagged(adversarial_rec=None):
 def test_retriable_abort_is_dead_lettered(tmp_path):
     """A transient backend failure (LLM unavailable) routes the record to the DLQ."""
     import asyncio
-    from messaging_agent.prod.runner import Pipeline
-    from messaging_agent.prod.deadletter import DeadLetterQueue
+    from agentkit.prod.runner import Pipeline
+    from agentkit.prod.deadletter import DeadLetterQueue
 
     class Down:
         provider = "mock"
@@ -364,8 +364,8 @@ def test_retriable_abort_is_dead_lettered(tmp_path):
 def test_no_consent_not_dead_lettered(tmp_path):
     """A terminal business no-send (NO_CONSENT) is never enqueued for replay."""
     import asyncio
-    from messaging_agent.prod.runner import Pipeline
-    from messaging_agent.prod.deadletter import DeadLetterQueue
+    from agentkit.prod.runner import Pipeline
+    from agentkit.prod.deadletter import DeadLetterQueue
 
     rec = _rec()
     rec["consent"] = {"email_opt_in": False, "sms_opt_in": False, "voice_opt_in": False}
@@ -381,8 +381,8 @@ def test_no_consent_not_dead_lettered(tmp_path):
 def test_replay_recovers_when_backend_healthy(tmp_path):
     """Replay re-runs DLQ entries; a now-healthy backend clears them."""
     import asyncio
-    from messaging_agent.prod.runner import Pipeline
-    from messaging_agent.prod.deadletter import DeadLetterQueue
+    from agentkit.prod.runner import Pipeline
+    from agentkit.prod.deadletter import DeadLetterQueue
 
     class Down:
         provider = "mock"
@@ -404,7 +404,7 @@ def test_replay_recovers_when_backend_healthy(tmp_path):
         available = True
 
         async def generate(self, system, user, **k):
-            from messaging_agent import timing
+            from agentkit import timing
             send_at = timing.compute_send_at(_rec(), "sms")
             return _valid_json("sms", send_at)
 

@@ -146,7 +146,7 @@ builds `synthetic.jsonl`.
 
 ## Where these are referenced
 
-- Web UI presets: `src/messaging_agent/web.py` (`sample_8613`, `adversarial`).
+- Web UI presets: `src/agentkit/web.py` (`sample_8613`, `adversarial`).
 - Regression fixtures: `tests/test_golden_regression.py`
   (`golden_full`, `golden_prospect_examples`, `hard`).
 - Other suites: `test_agent.py`, `test_realpage.py` (enterprise),

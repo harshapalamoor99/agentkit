@@ -9,7 +9,7 @@ import json
 
 import pytest
 
-from messaging_agent import cost, observability
+from agentkit import cost, observability
 
 
 # --- cost accounting ---
@@ -106,7 +106,7 @@ def test_instrument_node_reraises_and_records():
 
 
 def test_status_reports_disabled_by_default(monkeypatch):
-    monkeypatch.delenv("MESSAGING_AGENT_TRACING", raising=False)
+    monkeypatch.delenv("AGENTKIT_TRACING", raising=False)
     st = observability.status()
     assert st["tracing_enabled"] is False
 
@@ -132,7 +132,7 @@ class _UsageLLM:
 
 @pytest.fixture
 def _usage_llm():
-    import messaging_agent.nodes.llm as llmnode
+    import agentkit.nodes.llm as llmnode
     original = llmnode._client
     llmnode._client = _UsageLLM()
     yield
@@ -140,7 +140,7 @@ def _usage_llm():
 
 
 def test_cost_appears_in_final_output(_usage_llm):
-    from messaging_agent.graph import build_graph
+    from agentkit.graph import build_graph
 
     record = {
         "task_id": "cost-1", "domain": "support",

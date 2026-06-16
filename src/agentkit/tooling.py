@@ -8,8 +8,8 @@ return a JSON string the model can consume.
 
 Typical loop (OpenAI):
 
-    from messaging_agent import AgentService
-    from messaging_agent.tooling import to_openai_tool, run_tool_call
+    from agentkit import AgentService
+    from agentkit.tooling import to_openai_tool, run_tool_call
 
     svc = AgentService("leasing")
     tools = [to_openai_tool(svc.as_tool())]
@@ -121,7 +121,7 @@ class ToolRegistry:
         return await run_tool_call(svc, tool_name, arguments, as_json=as_json)
 
 
-def router_as_tool(router: AgentRouter, *, name: str = "messaging_agent",
+def router_as_tool(router: AgentRouter, *, name: str = "agentkit",
                    description: str | None = None) -> dict[str, Any]:
     """Expose an :class:`AgentRouter` itself as a single tool that auto-routes.
 

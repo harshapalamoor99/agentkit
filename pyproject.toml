@@ -1,7 +1,7 @@
 [project]
-name = "messaging-agent"
+name = "agentkit"
 version = "0.1.0"
-description = "Context-aware, data-driven messaging agent built on LangGraph"
+description = "AgentKit — a domain-pluggable LLM agent engine built on LangGraph"
 requires-python = ">=3.11"
 dependencies = [
     "langgraph>=1.0",
@@ -20,10 +20,10 @@ langsmith = ["langsmith>=0.1"]
 dev = ["pytest>=8.0"]
 
 [project.scripts]
-messaging-agent = "messaging_agent.cli:main"
-messaging-agent-eval = "messaging_agent.evals.cli:main"
-messaging-agent-runner = "messaging_agent.prod.runner:main"
-messaging-agent-worker = "messaging_agent.prod.worker:main"
+agentkit = "agentkit.cli:main"
+agentkit-eval = "agentkit.evals.cli:main"
+agentkit-runner = "agentkit.prod.runner:main"
+agentkit-worker = "agentkit.prod.worker:main"
 
 [build-system]
 requires = ["setuptools>=68"]

@@ -3,7 +3,7 @@
 Performs the generic, cross-domain governance — sanitize convergence, PII tokenization
 (AC-8), tenant resolution (AC-7) and decision-lineage assembly (AC-12) — then delegates
 the domain-specific work (fact extraction, guardrails, few-shot selection and prompt
-construction) to the active :class:`~messaging_agent.domain.Domain`.
+construction) to the active :class:`~agentkit.domain.Domain`.
 
 This is the convergence point for both the clean and sanitized paths, so it is where
 zero-trust data governance is applied before anything reaches the model.

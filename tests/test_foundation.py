@@ -4,15 +4,15 @@ import json
 
 import pytest
 
-from messaging_agent import (
+from agentkit import (
     AgentRouter,
     AgentService,
     InMemoryKnowledgeBase,
     KnowledgeDoc,
     available_domains,
 )
-from messaging_agent import knowledge as kb_mod
-from messaging_agent.domain import DecisionContext, Domain, register_domain
+from agentkit import knowledge as kb_mod
+from agentkit.domain import DecisionContext, Domain, register_domain
 
 
 # --------------------------------------------------------------------------------------
@@ -109,7 +109,7 @@ class _EchoLLM:
 
 @pytest.fixture
 def _echo_llm():
-    import messaging_agent.nodes.llm as llmnode
+    import agentkit.nodes.llm as llmnode
     original = llmnode._client
     llmnode._client = _EchoLLM()
     yield
@@ -117,7 +117,7 @@ def _echo_llm():
 
 
 def _run(record):
-    from messaging_agent.graph import app
+    from agentkit.graph import app
     init = {"task_id": record.get("task_id"), "record": record, "dataset": [record]}
     return asyncio.run(app.ainvoke(init))["final_output"]
 

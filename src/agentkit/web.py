@@ -1,9 +1,9 @@
 """FastAPI web UI for testing the context-aware messaging agent.
 
 Run:
-    PYTHONPATH=src python -m messaging_agent.web
+    PYTHONPATH=src python -m agentkit.web
     # or
-    PYTHONPATH=src uvicorn messaging_agent.web:api --reload --port 8000
+    PYTHONPATH=src uvicorn agentkit.web:api --reload --port 8000
 
 Then open http://127.0.0.1:8000 — paste/edit a JSONL record and click "Run agent"
 to see the decision, the produced message, every acceptance-criterion pass/fail,
@@ -23,7 +23,7 @@ from pydantic import BaseModel
 from .graph import app as agent_app
 from .llm_client import LLMClient
 
-api = FastAPI(title="Context-Aware Messaging Agent")
+api = FastAPI(title="AgentKit")
 
 
 @api.on_event("startup")
@@ -260,7 +260,7 @@ HTML_PAGE = """<!doctype html>
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Messaging Agent — Test Console</title>
+<title>AgentKit — Test Console</title>
 <style>
   :root { --bg:#0f1419; --panel:#1a2129; --border:#2c3742; --txt:#d7e0ea;
           --muted:#8b97a4; --green:#3fb950; --red:#f85149; --amber:#d29922;
@@ -333,7 +333,7 @@ HTML_PAGE = """<!doctype html>
 </head>
 <body>
 <header>
-  <h1>🛰️ Context-Aware Messaging Agent</h1>
+  <h1>🛰️ AgentKit</h1>
   <span id="provider">checking provider…</span>
   <nav class="tabs">
     <button id="tab-single" class="active">Single record</button>

@@ -24,7 +24,7 @@ log = get_logger()
 
 REQUESTS_TOPIC = os.getenv("KAFKA_REQUESTS_TOPIC", "messaging.requests")
 RESULTS_TOPIC = os.getenv("KAFKA_RESULTS_TOPIC", "messaging.results")
-GROUP_ID = os.getenv("KAFKA_GROUP_ID", "messaging-agent-workers")
+GROUP_ID = os.getenv("KAFKA_GROUP_ID", "agentkit-workers")
 
 
 def _kafka_available() -> bool:

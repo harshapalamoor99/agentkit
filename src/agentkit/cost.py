@@ -1,6 +1,6 @@
 """Token + cost accounting for LLM usage.
 
-Turns the raw token counts captured by :class:`~messaging_agent.llm_client.LLMClient`
+Turns the raw token counts captured by :class:`~agentkit.llm_client.LLMClient`
 (``last_usage``) into a USD cost using a small, overridable price table, and accumulates
 usage across retries so the decision lineage carries a single authoritative total.
 
@@ -9,7 +9,7 @@ The built-in table covers common defaults; override or extend it without code ch
 
     # JSON: {"model-name": {"input": <usd_per_1m>, "output": <usd_per_1m>}, ...}
     export LLM_PRICE_TABLE='{"gpt-4o-mini": {"input": 0.15, "output": 0.60}}'
-    export LLM_PRICE_TABLE_PATH=/etc/messaging_agent/prices.json
+    export LLM_PRICE_TABLE_PATH=/etc/agentkit/prices.json
 
 Unknown models cost 0.0 (and are flagged via ``priced=False``) rather than raising, so
 cost accounting never breaks a decision. Everything here is pure-python, no deps.

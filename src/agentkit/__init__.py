@@ -1,4 +1,4 @@
-"""messaging_agent package.
+"""agentkit package.
 
 Loads a local .env (if present) on import so gateway/model configuration is picked up
 automatically without manual exports. Real environment variables always take
@@ -6,7 +6,7 @@ precedence over .env values.
 
 This package is a **reusable, domain-pluggable agent engine**: the LangGraph pipeline,
 LLM client and ``prod`` scaling layer are domain-agnostic, while everything use-case
-specific lives behind the :class:`~messaging_agent.domain.Domain` interface. The bundled
+specific lives behind the :class:`~agentkit.domain.Domain` interface. The bundled
 ``leasing`` domain (default) reproduces the original housing agent; ``support`` is a
 second example. See ``docs/AUTHORING_A_DOMAIN.md`` to plug in your own.
 """

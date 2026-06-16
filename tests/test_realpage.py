@@ -10,10 +10,10 @@ import os
 
 import pytest
 
-from messaging_agent import (circuit_breaker, geo, pii, telemetry, tenants,
+from agentkit import (circuit_breaker, geo, pii, telemetry, tenants,
                               timing, workflow)
-from messaging_agent.graph import app
-from messaging_agent.realpage_criteria import ALL_RP_CRITERIA, evaluate_all
+from agentkit.graph import app
+from agentkit.realpage_criteria import ALL_RP_CRITERIA, evaluate_all
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "evals")
 
@@ -131,7 +131,7 @@ def test_regulated_asset_class_no_pricing_incentive(enterprise):
     assert out.get("asset_class") in (None, "lihtc") or out["asset_class"] == "lihtc"
     m = out.get("next_message")
     if m and m.get("body"):
-        from messaging_agent.domains.leasing import _PRICING_INCENTIVE_RE
+        from agentkit.domains.leasing import _PRICING_INCENTIVE_RE
         assert not _PRICING_INCENTIVE_RE.search(m["body"])
 
 

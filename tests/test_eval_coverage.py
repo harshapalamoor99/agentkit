@@ -18,8 +18,8 @@ for _k in ("LITELLM_API_KEY", "LITELLM_API_BASE", "LITELLM_MODEL",
 
 import pytest  # noqa: E402
 
-from messaging_agent import safety_rules, tenants  # noqa: E402
-from messaging_agent.graph import app  # noqa: E402
+from agentkit import safety_rules, tenants  # noqa: E402
+from agentkit.graph import app  # noqa: E402
 
 DATA = os.path.join(os.path.dirname(__file__), "..", "data", "evals")
 FULL = os.path.join(DATA, "eval_full.jsonl")

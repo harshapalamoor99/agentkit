@@ -11,7 +11,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from messaging_agent.evals import langsmith_eval as lse
+from agentkit.evals import langsmith_eval as lse
 
 
 # --- gating ---

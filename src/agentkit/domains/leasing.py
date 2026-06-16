@@ -1,4 +1,4 @@
-"""Leasing domain — the reference implementation of :class:`messaging_agent.domain.Domain`.
+"""Leasing domain — the reference implementation of :class:`agentkit.domain.Domain`.
 
 This packages the original multifamily-housing leasing agent's behavior behind the
 pluggable domain seam: the system prompt, fact extraction, channel/consent model,

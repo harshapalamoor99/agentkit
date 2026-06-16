@@ -249,18 +249,18 @@ and keeps a warm connection to stay under the latency budget.
 
 | Path | Responsibility |
 |---|---|
-| `src/messaging_agent/graph.py` | LangGraph wiring (entry point: `app`) |
-| `src/messaging_agent/state.py` | Shared state schema (the inter-node contract) |
-| `src/messaging_agent/domain.py` | `Domain` plugin interface + registry (reusability seam) |
-| `src/messaging_agent/domains/` | Bundled domains: `leasing` (default), `support` |
-| `src/messaging_agent/nodes/` | One module per graph node |
-| `src/messaging_agent/knowledge.py` | RAG layer (KnowledgeBase + TF-IDF retriever) |
-| `src/messaging_agent/multiagent.py` | AgentService + AgentRouter |
-| `src/messaging_agent/tooling.py` | OpenAI/Anthropic tool-calling adapters |
-| `src/messaging_agent/observability.py` | OpenTelemetry node tracing (opt-in, no-op default) |
-| `src/messaging_agent/cost.py` | Token → USD cost accounting |
-| `src/messaging_agent/evals/` | Harness, judge, semantic/personalization/reply scorers, LangSmith adapter |
-| `src/messaging_agent/prod/` | Runner, worker, idempotency, cache, audit, dead-letter, tracing |
-| `src/messaging_agent/llm_client.py` | Provider-agnostic async client |
+| `src/agentkit/graph.py` | LangGraph wiring (entry point: `app`) |
+| `src/agentkit/state.py` | Shared state schema (the inter-node contract) |
+| `src/agentkit/domain.py` | `Domain` plugin interface + registry (reusability seam) |
+| `src/agentkit/domains/` | Bundled domains: `leasing` (default), `support` |
+| `src/agentkit/nodes/` | One module per graph node |
+| `src/agentkit/knowledge.py` | RAG layer (KnowledgeBase + TF-IDF retriever) |
+| `src/agentkit/multiagent.py` | AgentService + AgentRouter |
+| `src/agentkit/tooling.py` | OpenAI/Anthropic tool-calling adapters |
+| `src/agentkit/observability.py` | OpenTelemetry node tracing (opt-in, no-op default) |
+| `src/agentkit/cost.py` | Token → USD cost accounting |
+| `src/agentkit/evals/` | Harness, judge, semantic/personalization/reply scorers, LangSmith adapter |
+| `src/agentkit/prod/` | Runner, worker, idempotency, cache, audit, dead-letter, tracing |
+| `src/agentkit/llm_client.py` | Provider-agnostic async client |
 
 For how to plug in your own domain, see [`AUTHORING_A_DOMAIN.md`](AUTHORING_A_DOMAIN.md).

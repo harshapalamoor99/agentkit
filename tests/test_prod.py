@@ -9,9 +9,9 @@ for _k in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "AZURE_OPENAI_API_KEY",
 
 import pytest  # noqa: E402
 
-from messaging_agent.prod.cache import ResponseCache, fingerprint  # noqa: E402
-from messaging_agent.prod.idempotency import IdempotencyStore, idempotency_key  # noqa: E402
-from messaging_agent.prod.runner import Pipeline  # noqa: E402
+from agentkit.prod.cache import ResponseCache, fingerprint  # noqa: E402
+from agentkit.prod.idempotency import IdempotencyStore, idempotency_key  # noqa: E402
+from agentkit.prod.runner import Pipeline  # noqa: E402
 
 DATA = os.path.join(os.path.dirname(__file__), "..", "data", "evals")
 
@@ -84,7 +84,7 @@ def test_pipeline_handles_bad_record_without_crash():
 
 def test_audit_writes_file(tmp_path):
     os.environ["AUDIT_LOG_PATH"] = str(tmp_path / "audit.jsonl")
-    from messaging_agent.prod.audit import AuditStore
+    from agentkit.prod.audit import AuditStore
 
     store = AuditStore()
     assert store.backend == "file"

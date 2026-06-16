@@ -7,8 +7,8 @@ for _k in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "AZURE_OPENAI_API_KEY",
            "GOOGLE_API_KEY", "GEMINI_API_KEY"):
     os.environ.pop(_k, None)
 
-from messaging_agent.evals import personalization, reply_classifier, semantic  # noqa: E402
-from messaging_agent.evals.harness import run, _percentile  # noqa: E402
+from agentkit.evals import personalization, reply_classifier, semantic  # noqa: E402
+from agentkit.evals.harness import run, _percentile  # noqa: E402
 
 DATA = os.path.join(os.path.dirname(__file__), "..", "data", "evals")
 

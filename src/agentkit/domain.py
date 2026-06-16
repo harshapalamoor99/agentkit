@@ -114,7 +114,7 @@ class Domain(ABC):
 
     # --- Knowledge / RAG (optional) -----------------------------------------------
     def knowledge_base(self):  # -> KnowledgeBase | None
-        """Return the :class:`~messaging_agent.knowledge.KnowledgeBase` to retrieve from.
+        """Return the :class:`~agentkit.knowledge.KnowledgeBase` to retrieve from.
 
         Default ``None`` (no RAG). Override to ground the LLM in retrieved documents.
         """

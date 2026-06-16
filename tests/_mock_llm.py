@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import json
 
-from messaging_agent import channels, timing
+from agentkit import channels, timing
 
 
 def _extract(user: str, marker: str) -> dict:

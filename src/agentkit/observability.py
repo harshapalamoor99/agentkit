@@ -9,8 +9,8 @@ spend per domain/tenant in any OTLP backend (Jaeger, Tempo, Honeycomb, Datadog, 
 *or* tracing isn't switched on, this module returns no-op spans with effectively zero
 overhead, so tests and lightweight deployments are unaffected. Turn it on with:
 
-    pip install 'messaging-agent[otel]'        # opentelemetry-sdk + otlp exporter
-    export MESSAGING_AGENT_TRACING=true
+    pip install 'agentkit[otel]'        # opentelemetry-sdk + otlp exporter
+    export AGENTKIT_TRACING=true
     export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317   # optional; else console
 
 This is independent of the LangSmith hook in ``prod/tracing.py`` (that one is wired via
@@ -29,7 +29,7 @@ _CONFIGURED = False
 
 
 def tracing_enabled() -> bool:
-    return os.getenv("MESSAGING_AGENT_TRACING", "").lower() in ("1", "true", "yes")
+    return os.getenv("AGENTKIT_TRACING", "").lower() in ("1", "true", "yes")
 
 
 def _configure() -> Any:
@@ -48,14 +48,14 @@ def _configure() -> Any:
         from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
         resource = Resource.create({
-            "service.name": os.getenv("OTEL_SERVICE_NAME", "messaging-agent"),
+            "service.name": os.getenv("OTEL_SERVICE_NAME", "agentkit"),
         })
         provider = TracerProvider(resource=resource)
         exporter = _make_exporter()
         if exporter is not None:
             provider.add_span_processor(BatchSpanProcessor(exporter))
         trace.set_tracer_provider(provider)
-        _TRACER = trace.get_tracer("messaging_agent")
+        _TRACER = trace.get_tracer("agentkit")
     except Exception:
         _TRACER = None
     return _TRACER
@@ -74,7 +74,7 @@ def _make_exporter():
     try:
         from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 
-        if os.getenv("MESSAGING_AGENT_TRACE_CONSOLE", "").lower() in ("1", "true", "yes"):
+        if os.getenv("AGENTKIT_TRACE_CONSOLE", "").lower() in ("1", "true", "yes"):
             return ConsoleSpanExporter()
     except Exception:
         pass
@@ -189,5 +189,5 @@ def status() -> dict[str, Any]:
         "tracing_enabled": tracing_enabled(),
         "tracer_active": _configure() is not None,
         "otlp_endpoint": os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT"),
-        "service_name": os.getenv("OTEL_SERVICE_NAME", "messaging-agent"),
+        "service_name": os.getenv("OTEL_SERVICE_NAME", "agentkit"),
     }

@@ -37,7 +37,7 @@ digraph capabilities {
   subgraph cluster_obs {
     label="OBSERVABILITY";
     fontname="Helvetica-Bold"; fontsize=12; color="#E65100"; style="rounded"; bgcolor="#FFF3E0";
-    otel [label="OpenTelemetry span per node\n(opt-in MESSAGING_AGENT_TRACING; no-op otherwise)", fillcolor="white", color="#E65100"];
+    otel [label="OpenTelemetry span per node\n(opt-in AGENTKIT_TRACING; no-op otherwise)", fillcolor="white", color="#E65100"];
     cost [label="token → USD cost\nsummed across retries → output[\"cost\"]", fillcolor="white", color="#E65100"];
     otel -> cost;
   }

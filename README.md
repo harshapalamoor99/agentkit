@@ -1,4 +1,6 @@
-# Context-Aware Messaging Agent
+# AgentKit
+
+**A domain-pluggable LLM agent engine** — build production agents where the **LLM makes the decision** and code enforces only compliance. One LangGraph core, many domains.
 
 ![CI](https://img.shields.io/badge/CI-passing-brightgreen)
 ![Tests](https://img.shields.io/badge/tests-193%20passed-brightgreen)
@@ -23,14 +25,14 @@ are inherited for free.
 
 | Capability | Where to look |
 |---|---|
-| **Clean agent architecture** — graph of small, testable `state→state` nodes | [`graph.py`](src/messaging_agent/graph.py), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
-| **Reusable abstraction** — `Domain` plugin seam; behavior-preserving refactor | [`domain.py`](src/messaging_agent/domain.py), [`docs/AUTHORING_A_DOMAIN.md`](docs/AUTHORING_A_DOMAIN.md) |
-| **Eval-driven development** — multi-layer harness that gates CI + LLM-as-judge | [`evals/harness.py`](src/messaging_agent/evals/harness.py) |
-| **RAG knowledge layer** — pluggable retrieval, tenant isolation, recall@k scoring | [`knowledge.py`](src/messaging_agent/knowledge.py) |
-| **Production hardening** — latency budget, circuit breaker, idempotency, dead-letter | [`nodes/llm.py`](src/messaging_agent/nodes/llm.py), [`prod/`](src/messaging_agent/prod/) |
-| **Observability + cost** — OpenTelemetry tracing + token→USD accounting | [`observability.py`](src/messaging_agent/observability.py), [`cost.py`](src/messaging_agent/cost.py) |
-| **Multi-agent + tool-calling** — services, router, OpenAI/Anthropic tool adapters | [`multiagent.py`](src/messaging_agent/multiagent.py), [`tooling.py`](src/messaging_agent/tooling.py) |
-| **Compliance by construction** — consent, opt-out, PII tokenization, fair-housing veto | [`safety_rules.py`](src/messaging_agent/safety_rules.py), [`evals/judge.py`](src/messaging_agent/evals/judge.py) |
+| **Clean agent architecture** — graph of small, testable `state→state` nodes | [`graph.py`](src/agentkit/graph.py), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
+| **Reusable abstraction** — `Domain` plugin seam; behavior-preserving refactor | [`domain.py`](src/agentkit/domain.py), [`docs/AUTHORING_A_DOMAIN.md`](docs/AUTHORING_A_DOMAIN.md) |
+| **Eval-driven development** — multi-layer harness that gates CI + LLM-as-judge | [`evals/harness.py`](src/agentkit/evals/harness.py) |
+| **RAG knowledge layer** — pluggable retrieval, tenant isolation, recall@k scoring | [`knowledge.py`](src/agentkit/knowledge.py) |
+| **Production hardening** — latency budget, circuit breaker, idempotency, dead-letter | [`nodes/llm.py`](src/agentkit/nodes/llm.py), [`prod/`](src/agentkit/prod/) |
+| **Observability + cost** — OpenTelemetry tracing + token→USD accounting | [`observability.py`](src/agentkit/observability.py), [`cost.py`](src/agentkit/cost.py) |
+| **Multi-agent + tool-calling** — services, router, OpenAI/Anthropic tool adapters | [`multiagent.py`](src/agentkit/multiagent.py), [`tooling.py`](src/agentkit/tooling.py) |
+| **Compliance by construction** — consent, opt-out, PII tokenization, fair-housing veto | [`safety_rules.py`](src/agentkit/safety_rules.py), [`evals/judge.py`](src/agentkit/evals/judge.py) |
 
 > Reading for review: start with **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)** for the
 > design decisions (ADR-style), then `docs/AUTHORING_A_DOMAIN.md` for the extensibility story.
@@ -47,11 +49,11 @@ pip install -r requirements.txt && pip install -e .
 PYTHONPATH=src pytest -q
 
 # Run the evaluation harness over a dataset (scores AC pass-rate, RAG recall, latency…)
-PYTHONPATH=src python -m messaging_agent.evals.cli data/evals/rag_knowledge.jsonl
+PYTHONPATH=src python -m agentkit.evals.cli data/evals/rag_knowledge.jsonl
 
 # Plug in a real LLM by setting any one provider key, then run the interactive console:
 #   export OPENAI_API_KEY=...   (or ANTHROPIC_API_KEY / GOOGLE_API_KEY / a LiteLLM gateway)
-PYTHONPATH=src python -m messaging_agent.web
+PYTHONPATH=src python -m agentkit.web
 ```
 
 ---
@@ -86,7 +88,7 @@ pipeline, the provider-agnostic LLM client, the safety/PII layer and the entire 
 scaling stack are **domain-agnostic**. Everything use-case specific — system prompt,
 which record fields become "facts", the channel/consent model, output compliance repairs,
 and the acceptance criteria — lives behind one interface,
-[`messaging_agent.domain.Domain`](src/messaging_agent/domain.py).
+[`agentkit.domain.Domain`](src/agentkit/domain.py).
 
 ![Reusability seam: one domain-agnostic engine, pluggable Domain plugins](docs/diagrams/domain-plugin.png)
 
@@ -94,7 +96,7 @@ To reuse the engine for a new use case you implement a `Domain` subclass and reg
 — **no change to the core graph, nodes, LLM client or prod layer**:
 
 ```python
-from messaging_agent import Domain, DecisionContext, register_domain, available_domains
+from agentkit import Domain, DecisionContext, register_domain, available_domains
 
 class MyDomain(Domain):
     name = "my_use_case"
@@ -121,13 +123,13 @@ second, unrelated example driven through the *same* compiled graph
 The engine ships three reusable, dependency-light capabilities (all opt-in, all degrade
 gracefully):
 
-- **Knowledge / RAG layer** ([`knowledge.py`](src/messaging_agent/knowledge.py)) — a
+- **Knowledge / RAG layer** ([`knowledge.py`](src/agentkit/knowledge.py)) — a
   domain can expose a `KnowledgeBase`; the `context` node retrieves top-k snippets
   *before* the LLM call, injects them as grounding, and records them in lineage +
   telemetry. A pure-python `InMemoryKnowledgeBase` (TF-IDF, zero deps) is the default;
   vector DBs plug in behind the same `retrieve(query, k, where)` interface. Enable for
   leasing with `LEASING_KNOWLEDGE_PATH=kb.jsonl`.
-- **Multi-agent surface** ([`multiagent.py`](src/messaging_agent/multiagent.py)) — each
+- **Multi-agent surface** ([`multiagent.py`](src/agentkit/multiagent.py)) — each
   domain is a specialized agent over the shared graph. `AgentService` runs one domain or
   exposes it `.as_tool()` for an external orchestrator; `AgentRouter` dispatches a record
   to the right domain (explicit field / classifier / default). HTTP: `GET /api/agents`,
@@ -136,12 +138,12 @@ gracefully):
   (vs. a record's `expected_knowledge_ids`) and merges `domain_metrics`; domains can
   override the LLM-judge rubric (`judge_system_prompt`) and the closed-loop telemetry
   feature vector (`telemetry_features`).
-- **Tracing + token/cost accounting** ([`observability.py`](src/messaging_agent/observability.py),
-  [`cost.py`](src/messaging_agent/cost.py)) — every node runs in an OpenTelemetry span
-  (opt-in via `MESSAGING_AGENT_TRACING`, no-op otherwise) and every LLM call's tokens are
+- **Tracing + token/cost accounting** ([`observability.py`](src/agentkit/observability.py),
+  [`cost.py`](src/agentkit/cost.py)) — every node runs in an OpenTelemetry span
+  (opt-in via `AGENTKIT_TRACING`, no-op otherwise) and every LLM call's tokens are
   priced and summed across retries into `output["cost"]` + lineage. Prices override via
   `LLM_PRICE_TABLE` / `LLM_PRICE_TABLE_PATH`. See `docs/AUTHORING_A_DOMAIN.md`.
-- **Hosted evals via LangSmith** ([`evals/langsmith_eval.py`](src/messaging_agent/evals/langsmith_eval.py))
+- **Hosted evals via LangSmith** ([`evals/langsmith_eval.py`](src/agentkit/evals/langsmith_eval.py))
   — the same scorers as the offline harness, run as a LangSmith *experiment* for
   trace-linked scores and version diffing. No-op without `LANGCHAIN_API_KEY`; run with
   `... --langsmith --dataset NAME --experiment PREFIX`.
@@ -222,10 +224,10 @@ python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
 # Run the provided sample
-PYTHONPATH=src python -m messaging_agent.cli data/evals/sample_8613.jsonl --out results.jsonl
+PYTHONPATH=src python -m agentkit.cli data/evals/sample_8613.jsonl --out results.jsonl
 
 # Run the adversarial / robustness suite (AC-16..22)
-PYTHONPATH=src python -m messaging_agent.cli data/evals/adversarial.jsonl --verbose
+PYTHONPATH=src python -m agentkit.cli data/evals/adversarial.jsonl --verbose
 ```
 
 ### Web UI (interactive test console)
@@ -238,9 +240,9 @@ aggregate summary (records, AC passed, critical-fail records, send/no-send
 counts, max latency).
 
 ```bash
-PYTHONPATH=src python -m messaging_agent.web        # serves http://127.0.0.1:8000
+PYTHONPATH=src python -m agentkit.web        # serves http://127.0.0.1:8000
 # custom port:
-PYTHONPATH=src uvicorn messaging_agent.web:api --port 8765
+PYTHONPATH=src uvicorn agentkit.web:api --port 8765
 ```
 
 ### Plugging in a real LLM
@@ -260,12 +262,12 @@ export LITELLM_API_KEY=sk-...
 export LITELLM_API_BASE=https://your-gateway/v1
 # Use the BARE model id the gateway exposes (GET /v1/models) — no "openai/" prefix.
 export LITELLM_MODEL=gemini-2.5-flash-lite-genaicenter-us
-PYTHONPATH=src python -m messaging_agent.cli data/evals/sample_8613.jsonl
+PYTHONPATH=src python -m agentkit.cli data/evals/sample_8613.jsonl
 ```
 
 ```bash
 export ANTHROPIC_API_KEY=sk-...
-PYTHONPATH=src python -m messaging_agent.cli data/evals/sample_8613.jsonl
+PYTHONPATH=src python -m agentkit.cli data/evals/sample_8613.jsonl
 ```
 
 If **no key** is present (or the call times out / errors / exhausts the 1.8s deadline),
@@ -286,7 +288,7 @@ audit-logged). A live LLM is therefore required to send; this is what guarantees
 > Leave it **off** for steady production traffic (which keeps itself warm). In code:
 > `client.start_keepwarm()` / `await client.stop_keepwarm()`.
 
-Override the model with `MESSAGING_AGENT_MODEL=...`.
+Override the model with `AGENTKIT_MODEL=...`.
 
 > **Model id gotcha (LiteLLM gateways):** set `LITELLM_MODEL` to the *bare* id the
 > gateway advertises (`curl $LITELLM_API_BASE/models`). A routing prefix such as
@@ -326,7 +328,7 @@ Run the enterprise scenarios (affordable/LIHTC recert, multi-tenant, cross-tenan
 late-night quiet-hours) and score them with the RP evaluators:
 
 ```bash
-PYTHONPATH=src python -m messaging_agent.cli data/evals/enterprise.jsonl
+PYTHONPATH=src python -m agentkit.cli data/evals/enterprise.jsonl
 PYTHONPATH=src python -m pytest tests/test_realpage.py -q
 ```
 
@@ -378,8 +380,8 @@ Beyond the inline ACs, a dedicated harness scores **semantic match to ground tru
 and the **declared per-record thresholds**, with optional LLM-as-judge quality scoring.
 
 ```bash
-PYTHONPATH=src python -m messaging_agent.evals.cli data/evals/sample_8613.jsonl --report report.json
-PYTHONPATH=src python -m messaging_agent.evals.cli data/evals/sample_8613.jsonl --judge   # quality layer
+PYTHONPATH=src python -m agentkit.evals.cli data/evals/sample_8613.jsonl --report report.json
+PYTHONPATH=src python -m agentkit.evals.cli data/evals/sample_8613.jsonl --judge   # quality layer
 ```
 
 It reports and **gates** on:
@@ -407,10 +409,10 @@ switch to Redis/Kafka/Postgres purely via environment variables.
 
 ```bash
 # Concurrent batch runner (structured JSON logs + audit + cache + idempotency)
-PYTHONPATH=src python -m messaging_agent.prod.runner data/evals/sample_8613.jsonl --concurrency 32
+PYTHONPATH=src python -m agentkit.prod.runner data/evals/sample_8613.jsonl --concurrency 32
 
 # Kafka worker — falls back to stdin mode when no Kafka cluster is configured
-PYTHONPATH=src python -m messaging_agent.prod.worker < data/evals/sample_8613.jsonl
+PYTHONPATH=src python -m agentkit.prod.worker < data/evals/sample_8613.jsonl
 ```
 
 | Concern | Module | Local (default) | Prod (env-activated) |
@@ -472,7 +474,7 @@ also **measures real wall-time p95 and gates** on each record's `p95_latency_ms`
 ## Layout
 
 ```
-src/messaging_agent/
+src/agentkit/
   state.py          # shared LangGraph state schema
   graph.py          # StateGraph wiring (entry point: `app`)
   domain.py         # Domain plugin interface + registry (reusability seam)

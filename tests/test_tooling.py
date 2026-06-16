@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from messaging_agent import (
+from agentkit import (
     AgentRouter,
     AgentService,
     ToolRegistry,
@@ -33,7 +33,7 @@ class _EchoLLM:
 
 @pytest.fixture
 def _echo_llm():
-    import messaging_agent.nodes.llm as llmnode
+    import agentkit.nodes.llm as llmnode
     original = llmnode._client
     llmnode._client = _EchoLLM()
     yield
@@ -110,7 +110,7 @@ def test_tool_registry_unknown_tool_returns_error():
 def test_router_as_tool_auto_routes(_echo_llm):
     router = AgentRouter(default_domain="support")
     tool = router_as_tool(router)
-    assert tool["name"] == "messaging_agent"
+    assert tool["name"] == "agentkit"
     result = asyncio.run(tool["callable"]({"record": SUPPORT_RECORD}))
     assert result["routed_to"] == "support"
 
@@ -118,7 +118,7 @@ def test_router_as_tool_auto_routes(_echo_llm):
 # --- RAG eval dataset ---
 
 def test_rag_eval_dataset_scores_full_recall():
-    from messaging_agent.evals.harness import run_file
+    from agentkit.evals.harness import run_file
     path = Path(__file__).resolve().parents[1] / "data" / "evals" / "rag_knowledge.jsonl"
     report = run_file(str(path))
     summary = report["summary"]
@@ -129,7 +129,7 @@ def test_rag_eval_dataset_scores_full_recall():
 
 
 def test_bundled_leasing_kb_loads():
-    from messaging_agent.domains.leasing import LeasingDomain
+    from agentkit.domains.leasing import LeasingDomain
     kb = LeasingDomain().knowledge_base()
     assert kb is not None
     hits = kb.retrieve("pet deposit", k=2, where={"tenant_id": "oakridge_pm"})

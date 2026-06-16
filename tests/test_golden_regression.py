@@ -52,7 +52,7 @@ def _actual(final):
 
 
 def _run_all(records):
-    from messaging_agent.graph import app
+    from agentkit.graph import app
 
     out = {}
     for rec in records:
@@ -113,8 +113,8 @@ def test_golden_full_decision_match_live(fixture_key):
     if os.environ.get("RUN_LIVE_EVAL") != "1":
         pytest.skip("set RUN_LIVE_EVAL=1 to run the live golden eval")
 
-    import messaging_agent.nodes.llm as llmnode
-    from messaging_agent.llm_client import LLMClient
+    import agentkit.nodes.llm as llmnode
+    from agentkit.llm_client import LLMClient
 
     real = LLMClient()
     if not getattr(real, "provider", None):

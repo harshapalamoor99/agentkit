@@ -1,8 +1,8 @@
-"""CLI runner: process a JSONL file through the messaging-agent graph.
+"""CLI runner: process a JSONL file through the agentkit graph.
 
 Usage:
-    python -m messaging_agent.cli data/evals/sample_8613.jsonl
-    python -m messaging_agent.cli data/evals/sample_8613.jsonl --out results.jsonl --verbose
+    python -m agentkit.cli data/evals/sample_8613.jsonl
+    python -m agentkit.cli data/evals/sample_8613.jsonl --out results.jsonl --verbose
 """
 from __future__ import annotations
 

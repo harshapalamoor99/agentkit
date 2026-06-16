@@ -14,8 +14,8 @@ import asyncio
 
 import pytest
 
-from messaging_agent import llm_client
-from messaging_agent.llm_client import LLMClient, detect_provider
+from agentkit import llm_client
+from agentkit.llm_client import LLMClient, detect_provider
 
 
 def _run(coro):

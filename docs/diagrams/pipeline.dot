@@ -4,7 +4,7 @@ digraph pipeline {
   labelloc="t";
   fontname="Helvetica-Bold";
   fontsize=20;
-  label="Context-Aware Messaging Agent — LangGraph Pipeline (LLM-only)";
+  label="AgentKit — LangGraph Pipeline (LLM-only)";
   node [fontname="Helvetica", fontsize=11, style="filled,rounded", shape=box, penwidth=1.4];
   edge [fontname="Helvetica", fontsize=9, color="#555555"];
 

@@ -15,9 +15,9 @@ for _k in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "AZURE_OPENAI_API_KEY",
            "GOOGLE_API_KEY", "GEMINI_API_KEY"):
     os.environ.pop(_k, None)
 
-from messaging_agent import channels, safety_rules, timing  # noqa: E402
-from messaging_agent.criteria import evaluate_all  # noqa: E402
-from messaging_agent.graph import app  # noqa: E402
+from agentkit import channels, safety_rules, timing  # noqa: E402
+from agentkit.criteria import evaluate_all  # noqa: E402
+from agentkit.graph import app  # noqa: E402
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "evals")
 

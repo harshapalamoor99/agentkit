@@ -48,4 +48,4 @@ jobs:
           # Runs the full agent over the RAG eval set offline (mock LLM); asserts the
           # report is produced and RAG recall is scored. Proves the pipeline is runnable
           # end-to-end in CI without any provider key.
-          python -m messaging_agent.evals.cli data/evals/rag_knowledge.jsonl
+          python -m agentkit.evals.cli data/evals/rag_knowledge.jsonl

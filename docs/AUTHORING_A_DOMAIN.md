@@ -4,7 +4,7 @@ This project is a **reusable, domain-pluggable agent engine**. The LangGraph pip
 (`intake → safety → sanitize → context → llm → parse_output → evaluate → emit/abort`),
 the provider-agnostic LLM client, the safety/PII layer and the entire `prod/` scaling
 stack are **domain-agnostic**. Everything specific to *what* the agent decides about
-lives behind one interface: [`messaging_agent.domain.Domain`](../src/messaging_agent/domain.py).
+lives behind one interface: [`agentkit.domain.Domain`](../src/agentkit/domain.py).
 
 To target a new use case you write a `Domain` subclass and register it. **No change to
 the core graph, nodes, LLM client or prod layer is required.**
@@ -26,7 +26,7 @@ Your `Domain` supplies the use-case knowledge:
 ## Minimal example
 
 ```python
-from messaging_agent.domain import Domain, DecisionContext, register_domain
+from agentkit.domain import Domain, DecisionContext, register_domain
 
 class SalesDomain(Domain):
     name = "sales"
@@ -61,7 +61,7 @@ class SalesDomain(Domain):
 register_domain(SalesDomain())
 ```
 
-Put your subclass in `src/messaging_agent/domains/<name>.py` and import it from
+Put your subclass in `src/agentkit/domains/<name>.py` and import it from
 `domain._ensure_builtins()` (or register it from your own bootstrap code).
 
 ## Selecting a domain
@@ -70,11 +70,11 @@ Resolution precedence (see `domain.get_domain`):
 
 1. Per record: `{"domain": "sales", ...}` on the input record.
 2. Per process: `AGENT_DOMAIN=sales`.
-3. Programmatic: `messaging_agent.set_default_domain("sales")`.
+3. Programmatic: `agentkit.set_default_domain("sales")`.
 4. Default: the first-registered domain (`leasing`).
 
 ```bash
-AGENT_DOMAIN=sales PYTHONPATH=src python -m messaging_agent.cli leads.jsonl
+AGENT_DOMAIN=sales PYTHONPATH=src python -m agentkit.cli leads.jsonl
 ```
 
 ## Contracts to respect
@@ -94,9 +94,9 @@ AGENT_DOMAIN=sales PYTHONPATH=src python -m messaging_agent.cli leads.jsonl
 
 ## Reference implementations
 
-- [`domains/leasing.py`](../src/messaging_agent/domains/leasing.py) — the full original
+- [`domains/leasing.py`](../src/agentkit/domains/leasing.py) — the full original
   housing agent (default domain).
-- [`domains/support.py`](../src/messaging_agent/domains/support.py) — a compact,
+- [`domains/support.py`](../src/agentkit/domains/support.py) — a compact,
   unrelated example (customer-support follow-ups) exercised end-to-end by
   [`tests/test_support_domain.py`](../tests/test_support_domain.py).
 
@@ -107,7 +107,7 @@ A domain can ground the LLM in retrieved documents. Implement two hooks and the
 prompt, and record them in the decision lineage + telemetry (`knowledge_retrieved`):
 
 ```python
-from messaging_agent import InMemoryKnowledgeBase, KnowledgeDoc
+from agentkit import InMemoryKnowledgeBase, KnowledgeDoc
 
 _KB = InMemoryKnowledgeBase([
     KnowledgeDoc(id="faq-pets", text="Pets: cats and dogs allowed with a deposit.",
@@ -148,10 +148,10 @@ The eval harness scores **retrieval recall@k** when a record declares
 ## Exposing as a multi-agent system
 
 Each registered domain is a specialized agent over the one shared graph. Use
-[`multiagent.py`](../src/messaging_agent/multiagent.py):
+[`multiagent.py`](../src/agentkit/multiagent.py):
 
 ```python
-from messaging_agent import AgentService, AgentRouter
+from agentkit import AgentService, AgentRouter
 
 # Run one domain agent directly:
 out = await AgentService("support").run(record)
@@ -169,10 +169,10 @@ HTTP: `GET /api/agents` lists the domain agents; `POST /api/dispatch` routes a r
 ## Tool-calling adapters (OpenAI / Anthropic)
 
 Expose any domain agent (or the router) as a function-calling tool with
-[`tooling.py`](../src/messaging_agent/tooling.py):
+[`tooling.py`](../src/agentkit/tooling.py):
 
 ```python
-from messaging_agent import AgentService, to_openai_tool, run_tool_call
+from agentkit import AgentService, to_openai_tool, run_tool_call
 
 svc = AgentService("leasing")
 tools = [to_openai_tool(svc.as_tool())]          # or to_anthropic_tool(...)
@@ -195,7 +195,7 @@ for call in resp.choices[0].message.tool_calls:
 - `data/knowledge/leasing_kb.jsonl` — tenant-tagged FAQ knowledge base auto-loaded by the
   leasing domain (override with `LEASING_KNOWLEDGE_PATH`, disable with an empty value).
 - `data/evals/rag_knowledge.jsonl` — RAG eval records carrying `expected_knowledge_ids`;
-  run `python -m messaging_agent.evals.cli data/evals/rag_knowledge.jsonl` to score
+  run `python -m agentkit.evals.cli data/evals/rag_knowledge.jsonl` to score
   retrieval `knowledge.mean_recall`.
 
 ## Observability: tracing + token/cost accounting
@@ -210,12 +210,12 @@ out["cost"]            # {model, prompt_tokens, completion_tokens, total_tokens,
 out["lineage"]["cost"] # same running total
 ```
 
-Prices live in [`cost.py`](../src/messaging_agent/cost.py) as USD per 1M tokens. Override
+Prices live in [`cost.py`](../src/agentkit/cost.py) as USD per 1M tokens. Override
 without code changes:
 
 ```bash
 export LLM_PRICE_TABLE='{"my-model": {"input": 0.5, "output": 1.5}}'
-export LLM_PRICE_TABLE_PATH=/etc/messaging_agent/prices.json   # JSON file, merged in
+export LLM_PRICE_TABLE_PATH=/etc/agentkit/prices.json   # JSON file, merged in
 ```
 
 Unknown models cost `0.0` and are flagged `priced=False` rather than raising.
@@ -227,13 +227,13 @@ Each graph node (`intake → safety → … → emit`) runs in a span carrying
 `agent.total_tokens`, `agent.cost_usd`, etc.
 
 ```bash
-pip install 'messaging-agent[otel]'
-export MESSAGING_AGENT_TRACING=true
-export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317   # else set MESSAGING_AGENT_TRACE_CONSOLE=true
+pip install 'agentkit[otel]'
+export AGENTKIT_TRACING=true
+export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317   # else set AGENTKIT_TRACE_CONSOLE=true
 ```
 
 ```python
-from messaging_agent import tracing_status, span
+from agentkit import tracing_status, span
 tracing_status()                       # {tracing_enabled, tracer_active, otlp_endpoint, ...}
 with span("my.work", {"k": "v"}):      # wrap your own code in custom spans
     ...
@@ -245,7 +245,7 @@ This is independent of the LangSmith hook in `prod/tracing.py` (enabled via
 ## Hosted evaluation with LangSmith
 
 The local harness (`evals/harness.py`) is the source of truth for scoring. The LangSmith
-adapter ([`evals/langsmith_eval.py`](../src/messaging_agent/evals/langsmith_eval.py))
+adapter ([`evals/langsmith_eval.py`](../src/agentkit/evals/langsmith_eval.py))
 reuses the **same** scorers (`personalization`, `semantic`, `judge`, RAG
 `knowledge_recall`, and the AC critical-fail gate) but runs them as a hosted *experiment*,
 giving you trace-linked scores and version-to-version comparison in the LangSmith UI.
@@ -254,20 +254,20 @@ It's a no-op without credentials — importing it never requires the SDK, and ev
 call checks `langsmith_enabled()` first.
 
 ```bash
-pip install 'messaging-agent[langsmith]'
+pip install 'agentkit[langsmith]'
 export LANGCHAIN_API_KEY=lsv2_...
 export LANGCHAIN_TRACING_V2=true            # optional: also trace each target run
-export LANGCHAIN_PROJECT=messaging-agent    # optional
+export LANGCHAIN_PROJECT=agentkit    # optional
 
 # push the JSONL as a dataset + run a scored experiment in one shot:
-python -m messaging_agent.evals.cli data/evals/golden_full.jsonl --langsmith \
+python -m agentkit.evals.cli data/evals/golden_full.jsonl --langsmith \
     --dataset leasing-golden --experiment leasing-v2 --judge
 ```
 
 Programmatic use:
 
 ```python
-from messaging_agent.evals import langsmith_eval as lse
+from agentkit.evals import langsmith_eval as lse
 
 lse.push_dataset("leasing-golden", records)          # idempotent by task_id
 await lse.run_experiment("leasing-golden", use_judge=True, experiment_prefix="leasing-v2")

@@ -9,8 +9,8 @@ for _k in ("LITELLM_API_KEY", "LITELLM_API_BASE", "LITELLM_MODEL",
            "GOOGLE_API_KEY", "GEMINI_API_KEY", "REDIS_URL"):
     os.environ.pop(_k, None)
 
-import messaging_agent.nodes.llm as llmnode  # noqa: E402
-from messaging_agent.graph import app  # noqa: E402
+import agentkit.nodes.llm as llmnode  # noqa: E402
+from agentkit.graph import app  # noqa: E402
 
 DATA = os.path.join(os.path.dirname(__file__), "..", "data", "evals")
 
@@ -29,7 +29,7 @@ def _run(record, dataset=None):
 # --- G14: idempotency / cache keys are tenant-scoped ------------------------
 
 def test_idempotency_key_distinct_across_tenants():
-    from messaging_agent.prod.idempotency import idempotency_key
+    from agentkit.prod.idempotency import idempotency_key
     a = {"task_id": "t1", "tenant_id": "oakridge_pm",
          "input": {"property_name": "Oak Ridge Apartments"}}
     b = {"task_id": "t1", "tenant_id": "summit_residential",
@@ -39,7 +39,7 @@ def test_idempotency_key_distinct_across_tenants():
 
 
 def test_cache_fingerprint_distinct_across_tenants():
-    from messaging_agent.prod.cache import fingerprint
+    from agentkit.prod.cache import fingerprint
     c = {"channel": "email", "primary_cta": "book_tour"}
     a = {"task_id": "t1", "tenant_id": "oakridge_pm",
          "input": {"property_name": "Oak Ridge Apartments"}}
@@ -51,7 +51,7 @@ def test_cache_fingerprint_distinct_across_tenants():
 # --- G15: raw-PII year guard ------------------------------------------------
 
 def test_pii_flags_currency_and_income_not_year():
-    from messaging_agent.pii import output_reflects_raw_pii
+    from agentkit.pii import output_reflects_raw_pii
     assert output_reflects_raw_pii("Save $2000 this month")  # currency -> flagged
     assert output_reflects_raw_pii("Your income of 84000 qualifies")  # income -> flagged
     assert output_reflects_raw_pii("balance 12500 remaining")  # bare 5-digit -> flagged
@@ -79,7 +79,7 @@ def test_email_subject_with_foreign_property_is_repaired():
         available = True
 
         async def generate(self, system, user, **k):
-            from messaging_agent import timing
+            from agentkit import timing
             send_at = timing.compute_send_at(_email_rec(), "email")
             return json.dumps({
                 "should_send": True,
@@ -107,7 +107,7 @@ def test_clean_email_subject_preserved():
         available = True
 
         async def generate(self, system, user, **k):
-            from messaging_agent import timing
+            from agentkit import timing
             send_at = timing.compute_send_at(_email_rec(), "email")
             return json.dumps({
                 "should_send": True,
@@ -138,7 +138,7 @@ def test_missing_legal_footer_is_appended():
         available = True
 
         async def generate(self, system, user, **k):
-            from messaging_agent import timing
+            from agentkit import timing
             send_at = timing.compute_send_at(_rec(), "sms")
             return json.dumps({
                 "should_send": True,
@@ -163,7 +163,7 @@ def test_present_legal_footer_not_duplicated():
         available = True
 
         async def generate(self, system, user, **k):
-            from messaging_agent import timing
+            from agentkit import timing
             send_at = timing.compute_send_at(_rec(), "sms")
             body = _body_no_footer() + " " + footer
             return json.dumps({
@@ -190,7 +190,7 @@ def test_unreflected_interest_flagged_but_still_sends():
         available = True
 
         async def generate(self, system, user, **k):
-            from messaging_agent import timing
+            from agentkit import timing
             send_at = timing.compute_send_at(_rec(), "sms")
             # Deliberately omit Richardson/city interest.
             body = ("Hi Taylor, thanks for reaching out. Book a tour this week! "
@@ -214,7 +214,7 @@ def test_unreflected_interest_flagged_but_still_sends():
 
 def test_examples_tokenize_pii_before_prompt():
     """Raw sensitive fields in an example record must not reach the rendered prompt."""
-    from messaging_agent.prompts import build_examples_with_ids
+    from agentkit.prompts import build_examples_with_ids
     example = {
         "task_id": "ex1",
         "input": {"property_name": "Oak Ridge Apartments",
@@ -232,7 +232,7 @@ def test_examples_tokenize_pii_before_prompt():
 def test_no_cross_tenant_examples_when_tenant_has_none():
     """A record whose tenant has no own examples must get NO few-shot, never another
     tenant's records (no foreign property names / expected outputs leak in)."""
-    from messaging_agent.nodes.context import context_builder
+    from agentkit.nodes.context import context_builder
 
     target = {  # oakridge tenant, no expected -> not itself an example
         "task_id": "target", "tenant_id": "oakridge_pm",

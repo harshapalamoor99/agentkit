@@ -37,10 +37,10 @@ def detect_provider() -> str | None:
 def default_model(provider: str) -> str:
     return {
         "litellm": os.getenv("LITELLM_MODEL", "gpt-4o-mini"),
-        "anthropic": os.getenv("MESSAGING_AGENT_MODEL", "claude-sonnet-4-5"),
-        "openai": os.getenv("MESSAGING_AGENT_MODEL", "gpt-4o-mini"),
+        "anthropic": os.getenv("AGENTKIT_MODEL", "claude-sonnet-4-5"),
+        "openai": os.getenv("AGENTKIT_MODEL", "gpt-4o-mini"),
         "azure": os.getenv("AZURE_OPENAI_DEPLOYMENT", "gpt-4o-mini"),
-        "gemini": os.getenv("MESSAGING_AGENT_MODEL", "gemini-2.0-flash"),
+        "gemini": os.getenv("AGENTKIT_MODEL", "gemini-2.0-flash"),
     }[provider]
 
 

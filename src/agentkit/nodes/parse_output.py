@@ -1,7 +1,7 @@
 """Output parser node (domain-agnostic orchestration).
 
 The LLM is trusted only for *content*. This node extracts JSON, asks the active
-:class:`~messaging_agent.domain.Domain` to validate the decision and minimally repair it
+:class:`~agentkit.domain.Domain` to validate the decision and minimally repair it
 for hard compliance (``domain.normalize``), snapshots the model's raw decision (G1),
 audits unjustified no-sends (G9), and requests a corrective retry on unusable output.
 Once retries or the shared time budget are exhausted the LLM node aborts to a safe

@@ -17,7 +17,7 @@ digraph domain_plugin {
     prod [label="prod/ scaling stack\n(batching, retry, runner, tracing)", fillcolor="white", color="#1565C0"];
   }
 
-  iface [label="messaging_agent.domain.Domain\n(ABC + registry)\n\nchannel_consent_map()\nbuild_decision_context()\nnormalize()\nevaluate_all()\nknowledge_base()  ·  judge_system_prompt()", shape=note, fillcolor="#FFF8E1", style="filled", color="#F9A825", penwidth=2];
+  iface [label="agentkit.domain.Domain\n(ABC + registry)\n\nchannel_consent_map()\nbuild_decision_context()\nnormalize()\nevaluate_all()\nknowledge_base()  ·  judge_system_prompt()", shape=note, fillcolor="#FFF8E1", style="filled", color="#F9A825", penwidth=2];
 
   subgraph cluster_domains {
     label="PLUGGABLE DOMAINS (the only use-case-specific code)";

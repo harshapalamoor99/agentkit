@@ -15,7 +15,7 @@ from pathlib import Path
 
 
 def _candidate_paths() -> list[Path]:
-    # Project root is two levels up from this file (src/messaging_agent/_env.py).
+    # Project root is two levels up from this file (src/agentkit/_env.py).
     root = Path(__file__).resolve().parents[2]
     seen: list[Path] = []
     for p in (Path.cwd() / ".env", root / ".env"):

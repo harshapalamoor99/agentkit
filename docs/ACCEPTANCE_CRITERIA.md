@@ -3,11 +3,11 @@
 This agent is validated against **two** criteria sets:
 
 1. **Functional & robustness suite — AC-01 .. AC-22** (the take-home spec): encoded as
-   executable evaluators in [`criteria.py`](../src/messaging_agent/criteria.py) and scored
+   executable evaluators in [`criteria.py`](../src/agentkit/criteria.py) and scored
    on **every record** by the `evaluate` node.
 2. **RealPage enterprise / production matrix — RP-01 .. RP-15** (the aspirational
    production spec): output-evaluable criteria scored in
-   [`realpage_criteria.py`](../src/messaging_agent/realpage_criteria.py); behavioral/infra
+   [`realpage_criteria.py`](../src/agentkit/realpage_criteria.py); behavioral/infra
    criteria covered by dedicated tests.
 
 > **Design invariant (applies to every AC):** the **LLM makes all business decisions**
@@ -122,14 +122,14 @@ dedicated tests in [`tests/test_realpage.py`](../tests/test_realpage.py).
 PYTHONPATH=src python -m pytest -q
 
 # Per-record AC scoring (any dataset)
-PYTHONPATH=src python -m messaging_agent.cli data/sample_8613.jsonl
-PYTHONPATH=src python -m messaging_agent.cli data/enterprise.jsonl
+PYTHONPATH=src python -m agentkit.cli data/sample_8613.jsonl
+PYTHONPATH=src python -m agentkit.cli data/enterprise.jsonl
 
 # Eval harness with the LLM-as-judge gates (RP-13)
-PYTHONPATH=src python -m messaging_agent.evals.cli data/sample_8613.jsonl --judge
+PYTHONPATH=src python -m agentkit.evals.cli data/sample_8613.jsonl --judge
 
 # Live LLM (LiteLLM gateway — use the BARE model id, no "openai/" prefix)
 export LITELLM_API_KEY=...  LITELLM_API_BASE=https://<gateway>/v1
 export LITELLM_MODEL=gemini-2.5-flash-lite-genaicenter-us
-PYTHONPATH=src python -m messaging_agent.cli data/sample_8613.jsonl
+PYTHONPATH=src python -m agentkit.cli data/sample_8613.jsonl
 ```

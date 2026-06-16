@@ -2,7 +2,7 @@ digraph agent_flow {
     rankdir=TB;
     fontname="Helvetica";
     labelloc="t";
-    label="Context-Aware Messaging Agent — End-to-End Flow (LangGraph)";
+    label="AgentKit — End-to-End Flow (LangGraph)";
     node [fontname="Helvetica", fontsize=11, style="filled,rounded", shape=box];
     edge [fontname="Helvetica", fontsize=9];
 

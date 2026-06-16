@@ -1,7 +1,7 @@
 """CLI for the evaluation harness.
 
-    python -m messaging_agent.evals.cli data/evals/sample_8613.jsonl
-    python -m messaging_agent.evals.cli data/evals/sample_8613.jsonl --judge --report report.json
+    python -m agentkit.evals.cli data/evals/sample_8613.jsonl
+    python -m agentkit.evals.cli data/evals/sample_8613.jsonl --judge --report report.json
 """
 from __future__ import annotations
 

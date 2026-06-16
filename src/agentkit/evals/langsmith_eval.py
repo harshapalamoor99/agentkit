@@ -18,11 +18,11 @@ Enable with::
     pip install langsmith
     export LANGCHAIN_API_KEY=lsv2_...
     export LANGCHAIN_TRACING_V2=true          # optional: also trace the target runs
-    export LANGCHAIN_PROJECT=messaging-agent  # optional
+    export LANGCHAIN_PROJECT=agentkit  # optional
 
 Then::
 
-    python -m messaging_agent.evals.cli data/evals/golden_full.jsonl --langsmith \
+    python -m agentkit.evals.cli data/evals/golden_full.jsonl --langsmith \
         --dataset leasing-golden --experiment leasing-v2 --judge
 """
 from __future__ import annotations
@@ -208,7 +208,7 @@ def push_dataset(name: str, dataset: list[dict], *, description: str | None = No
     except Exception:
         ds = client.create_dataset(
             dataset_name=name,
-            description=description or "messaging-agent eval dataset",
+            description=description or "agentkit eval dataset",
         )
 
     existing_ids: set[str] = set()
@@ -235,7 +235,7 @@ def push_dataset(name: str, dataset: list[dict], *, description: str | None = No
 
 
 async def run_experiment(dataset_name: str, *, use_judge: bool = False,
-                         experiment_prefix: str = "messaging-agent",
+                         experiment_prefix: str = "agentkit",
                          max_concurrency: int = 4) -> Any:
     """Run the agent over a hosted LangSmith dataset and score it with our evaluators."""
     _require_enabled()
@@ -266,7 +266,7 @@ def run_file_on_langsmith(path: str, *, dataset_name: str | None = None,
         if line:
             records.append(json.loads(line))
 
-    name = dataset_name or f"messaging-agent:{Path(path).stem}"
+    name = dataset_name or f"agentkit:{Path(path).stem}"
     prefix = experiment_prefix or Path(path).stem
     push_dataset(name, records)
     results = asyncio.run(

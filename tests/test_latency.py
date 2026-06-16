@@ -15,8 +15,8 @@ for _k in ("LITELLM_API_KEY", "LITELLM_API_BASE", "LITELLM_MODEL",
            "GOOGLE_API_KEY", "GEMINI_API_KEY"):
     os.environ.pop(_k, None)
 
-import messaging_agent.nodes.llm as llmnode  # noqa: E402
-from messaging_agent.graph import app  # noqa: E402
+import agentkit.nodes.llm as llmnode  # noqa: E402
+from agentkit.graph import app  # noqa: E402
 
 DATA = os.path.join(os.path.dirname(__file__), "..", "data", "evals")
 SLA_MS = 2000

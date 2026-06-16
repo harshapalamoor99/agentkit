@@ -28,7 +28,7 @@ from _mock_llm import MockLLMClient  # noqa: E402
 def _reset_circuit_breaker():
     """Circuit breakers are process-level globals (default + per-key registry); reset
     them between tests so a failure-injection test can't leave one OPEN for later cases."""
-    import messaging_agent.circuit_breaker as cb
+    import agentkit.circuit_breaker as cb
     cb.reset_all()
     yield
     cb.reset_all()
@@ -38,8 +38,8 @@ def _reset_circuit_breaker():
 def _mock_llm():
     """The agent is LLM-only; install a hermetic mock 'model' so the pipeline
     produces a valid message offline. Tests that need specific LLM behavior
-    (latency, failures) override messaging_agent.nodes.llm._client themselves."""
-    import messaging_agent.nodes.llm as llmnode
+    (latency, failures) override agentkit.nodes.llm._client themselves."""
+    import agentkit.nodes.llm as llmnode
     original = llmnode._client
     llmnode._client = MockLLMClient()
     yield

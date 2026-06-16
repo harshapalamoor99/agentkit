@@ -8,8 +8,8 @@ import asyncio
 
 import pytest
 
-from messaging_agent import domain as domain_mod
-from messaging_agent.graph import app
+from agentkit import domain as domain_mod
+from agentkit.graph import app
 
 
 class _SupportMockLLM:
@@ -36,7 +36,7 @@ class _SupportMockLLM:
 
 @pytest.fixture
 def _support_llm():
-    import messaging_agent.nodes.llm as llmnode
+    import agentkit.nodes.llm as llmnode
     original = llmnode._client
     llmnode._client = _SupportMockLLM()
     yield

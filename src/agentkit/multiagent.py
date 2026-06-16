@@ -1,6 +1,6 @@
 """Multi-agent surface — run the engine as a composable agent and route across domains.
 
-Each registered :class:`~messaging_agent.domain.Domain` is effectively a *specialized
+Each registered :class:`~agentkit.domain.Domain` is effectively a *specialized
 agent* (its own prompt, channels, compliance, criteria and optional knowledge base),
 all sharing the one compiled LangGraph pipeline. This module exposes two things:
 

@@ -5,7 +5,7 @@ prod and off in tests:
 
     export LANGCHAIN_TRACING_V2=true
     export LANGCHAIN_API_KEY=ls-...
-    export LANGCHAIN_PROJECT=messaging-agent
+    export LANGCHAIN_PROJECT=agentkit
 
 LangGraph/LangChain pick these up automatically. This module just reports status and
 provides a per-invocation run config (tags + metadata) to attach to `app.ainvoke`.
@@ -23,8 +23,8 @@ def tracing_enabled() -> bool:
 def run_config(task_id: str, **metadata: Any) -> dict[str, Any]:
     """Config dict to pass as `app.ainvoke(state, config=run_config(...))`."""
     return {
-        "run_name": f"messaging_agent:{task_id}",
-        "tags": ["messaging-agent", f"task:{task_id}"],
+        "run_name": f"agentkit:{task_id}",
+        "tags": ["agentkit", f"task:{task_id}"],
         "metadata": {"task_id": task_id, **metadata},
     }
 

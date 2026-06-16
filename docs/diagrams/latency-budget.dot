@@ -1,0 +1,28 @@
+digraph latency {
+  rankdir=LR;
+  bgcolor="white";
+  labelloc="t";
+  fontname="Helvetica-Bold";
+  fontsize=20;
+  label="Latency Budget — p99 < 2s bounded by construction (abort-on-deadline)";
+  node [fontname="Helvetica", fontsize=10, shape=box, style="filled,rounded", penwidth=1.3];
+  edge [fontname="Helvetica", fontsize=9, color="#555555"];
+
+  a [label="dequeue\n~5 ms", fillcolor="#E3F2FD", color="#1976D2"];
+  b [label="intake + safety\n~10 ms", fillcolor="#E3F2FD", color="#1976D2"];
+  c [label="context build\n~5 ms", fillcolor="#F1F8E9", color="#558B2F"];
+  d [label="LLM call ★\nsteady ~770–860 ms\n(shared 1.8s deadline)", fillcolor="#FCE4EC", color="#C2185B", penwidth=2];
+  e [label="parse + repair\n~5 ms", fillcolor="#F1F8E9", color="#558B2F"];
+  f [label="evaluate\n~10 ms", fillcolor="#E3F2FD", color="#1976D2"];
+  g [label="emit / publish\n~5 ms", fillcolor="#E8F5E9", color="#2E7D32"];
+
+  ok [label="SEND\ntotal ≈ 0.8–1.2s ✅", shape=oval, fillcolor="#E8F5E9", color="#2E7D32", penwidth=2];
+  to [label="DEADLINE HIT (≥1.8s)\n→ safe no-send abort\nlatency capped < 2s ✅", shape=oval, fillcolor="#FFEBEE", color="#C62828", penwidth=2];
+
+  a -> b -> c -> d -> e -> f -> g -> ok;
+  d -> to [label="slow gateway /\ntimeout / error", style=dashed, color="#C62828", fontcolor="#C62828"];
+
+  note [shape=note, fillcolor="#FFF8E1", style=filled, color="#F9A825",
+        label="Warm-up primes the gateway on startup; a background\nkeep-warm pinger holds it hot for the whole session.\nLLM-only: never fabricates a message —\na slow model ABORTS rather than breach the SLA.\nThat is what makes p99 < 2s a guarantee, not a hope."];
+  g -> note [style=invis];
+}

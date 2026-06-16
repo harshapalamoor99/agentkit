@@ -1,0 +1,49 @@
+digraph context_zoom {
+    rankdir=TB;
+    fontname="Helvetica";
+    labelloc="t";
+    label="Zoom: CONTEXT node — how the prompt is built (the \"learn from data\" step)";
+    node [fontname="Helvetica", fontsize=11, style="filled,rounded", shape=box];
+    edge [fontname="Helvetica", fontsize=9];
+
+    rec [label="sanitized record\n(this prospect)", shape=oval, fillcolor="#e3f2fd"];
+    dataset [label="full input batch\n(all records in the JSONL)", shape=oval, fillcolor="#e3f2fd"];
+    canon [label="data/canonical_examples.jsonl\n(5 synthetic, tenant-neutral\nlabeled examples)", shape=cylinder, fillcolor="#f3e5f5"];
+
+    subgraph cluster_facts {
+        label="A. DERIVE FACTS (deterministic, from this record)";
+        style="filled,rounded"; fillcolor="#e8f5e9"; fontname="Helvetica";
+        f1 [label="consent → allowed_channels", fillcolor="#ffffff"];
+        f2 [label="timezone, business hours,\nTCPA window", fillcolor="#ffffff"];
+        f3 [label="dates: last_interaction,\nmove_date_target", fillcolor="#ffffff"];
+        f4 [label="brand_voice, legal_footer,\nasset_class, primary_cta", fillcolor="#ffffff"];
+        f5 [label="interests (amenity/city)\nfirst_name", fillcolor="#ffffff"];
+    }
+
+    subgraph cluster_fewshot {
+        label="B. SELECT FEW-SHOT EXAMPLES (NOT vector RAG)";
+        style="filled,rounded"; fillcolor="#fff3e0"; fontname="Helvetica";
+        s1 [label="filter: SAME TENANT only\n(G11 — no cross-tenant leak)", fillcolor="#ffffff"];
+        s2 [label="rank by _relevance_score:\nlifecycle +4, primary_cta +3,\nhorizon side +2, persona +1", fillcolor="#ffffff"];
+        s3 [label="too few? top up from\ncanonical bank", fillcolor="#ffffff"];
+        s4 [label="ensure contrast — but only swap in a\ndifferent-next_action example that\nSHARES this lifecycle_stage\n(keep homogeneous set otherwise)", fillcolor="#ffffff"];
+        s5 [label="take top 3, PII-tokenize,\nrender INPUT:/OUTPUT: blocks", fillcolor="#ffffff"];
+        s1 -> s2 -> s3 -> s4 -> s5;
+    }
+
+    pii [label="PII tokenize\n(record + examples)", fillcolor="#e8f5e9"];
+
+    prompt [label="BUILD PROMPT\nSYSTEM (fixed rules + schema)\n+ USER (examples + record + facts)\n≈ 2,000 tokens", fillcolor="#e1bee7", shape=note];
+
+    out [label="→ to LLM node", shape=oval, fillcolor="#e3f2fd"];
+
+    rec -> pii;
+    rec -> f1; rec -> f2; rec -> f3; rec -> f4; rec -> f5;
+    dataset -> s1;
+    canon -> s3;
+    pii -> s1 [style=dashed, label="tokenized"];
+
+    f1 -> prompt; f2 -> prompt; f3 -> prompt; f4 -> prompt; f5 -> prompt;
+    s5 -> prompt;
+    prompt -> out;
+}

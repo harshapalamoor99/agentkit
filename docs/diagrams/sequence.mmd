@@ -1,0 +1,42 @@
+sequenceDiagram
+    autonumber
+    participant R as Record (JSONL)
+    participant G as LangGraph
+    participant C as Context node
+    participant L as LLM node
+    participant API as Gemini (via gateway)
+    participant P as Parse + Compliance
+    participant E as Evaluate
+
+    Note over G: deadline = now + TOTAL_LLM_BUDGET_S (1.8s)
+
+    R->>G: invoke
+    G->>G: intake → safety (validate, consent, scan)
+    alt no consent / unsafe / bad record
+        G-->>R: ABORT (safe no-send + reasoning)
+    else ok
+        G->>C: build prompt
+        C->>C: derive facts + rank few-shot (~2k tokens)
+        C->>L: system + user prompt
+
+        loop attempt 1..MAX_RETRIES (shared budget)
+            Note over L: timeout = min(LLM_TIMEOUT_S 1.6, remaining budget)
+            L->>API: generate (temp=0, JSON)
+            alt responds in time
+                API-->>L: raw JSON
+                L->>P: output
+                P->>P: extract JSON, validate schema,<br/>re-impose LEGAL guardrails only
+                alt valid
+                    P->>E: success
+                    E-->>R: EMIT (message + next_action + 23 AC scores)
+                else malformed
+                    P-->>L: RETRY with correction prompt
+                end
+            else timeout / budget exhausted / API error
+                API--xL: (too slow)
+                L-->>R: ABORT (LLM_TIMEOUT / BUDGET / ERROR)
+            end
+        end
+    end
+
+    Note over L,API: ⚠ On a slower machine, calls exceed 1.6s →<br/>timeout → ABORT → score drops.<br/>Fix: raise LLM_TIMEOUT_S / TOTAL_LLM_BUDGET_S

@@ -1,0 +1,40 @@
+digraph pipeline {
+  rankdir=TB;
+  bgcolor="white";
+  labelloc="t";
+  fontname="Helvetica-Bold";
+  fontsize=20;
+  label="Context-Aware Messaging Agent — LangGraph Pipeline (LLM-only)";
+  node [fontname="Helvetica", fontsize=11, style="filled,rounded", shape=box, penwidth=1.4];
+  edge [fontname="Helvetica", fontsize=9, color="#555555"];
+
+  start  [label="START\n(JSONL record)", shape=oval, fillcolor="#E8EAF6", color="#3949AB"];
+  intake [label="intake\nparse + validate +\nconsent gate", fillcolor="#E3F2FD", color="#1976D2"];
+  safety [label="safety\nscan: injection /\njailbreak / toxic", fillcolor="#E3F2FD", color="#1976D2"];
+  sanitize [label="sanitize\nneutralize unsafe\ninput fields", fillcolor="#FFF3E0", color="#F57C00"];
+  context [label="context  ◆ governance hub\nPII tokenize · tenant brand ·\nasset-class · few-shot · lineage", fillcolor="#F1F8E9", color="#558B2F"];
+  llm    [label="llm  ★ DECISION MAKER\nchannel · timing · copy ·\nnext_action  (circuit breaker)", fillcolor="#FCE4EC", color="#C2185B", penwidth=2.2];
+  parse  [label="parse_output\nschema repair +\ncompliance quarantine", fillcolor="#F1F8E9", color="#558B2F"];
+  evaluate [label="evaluate\nAC-01..23 +\nRP criteria", fillcolor="#E3F2FD", color="#1976D2"];
+  emit   [label="emit\nfinal output +\naudit + lineage", fillcolor="#E8F5E9", color="#2E7D32"];
+  abort  [label="abort\nsafe no-send\n(reasoning logged)", fillcolor="#FFEBEE", color="#C62828"];
+  done   [label="END", shape=oval, fillcolor="#E8EAF6", color="#3949AB"];
+
+  start -> intake;
+  intake -> safety   [label="ok"];
+  intake -> abort    [label="no_consent / bad_record", color="#C62828", fontcolor="#C62828"];
+  safety -> context  [label="clean"];
+  safety -> sanitize [label="sanitized", color="#F57C00", fontcolor="#F57C00"];
+  safety -> abort    [label="block", color="#C62828", fontcolor="#C62828"];
+  sanitize -> context;
+  context -> llm;
+  llm -> parse       [label="parse"];
+  llm -> abort       [label="timeout / error /\ncircuit open", color="#C62828", fontcolor="#C62828"];
+  parse -> evaluate  [label="success"];
+  parse -> llm       [label="retry (≤2)\nself-correct", style=dashed, color="#8E24AA", fontcolor="#8E24AA"];
+  evaluate -> emit;
+  emit -> done;
+  abort -> done;
+
+  { rank=same; emit; abort; }
+}

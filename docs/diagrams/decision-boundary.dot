@@ -1,0 +1,44 @@
+digraph boundary {
+  rankdir=LR;
+  bgcolor="white";
+  labelloc="t";
+  fontname="Helvetica-Bold";
+  fontsize=20;
+  label="Decision Boundary — the LLM decides, code only enforces compliance";
+  node [fontname="Helvetica", fontsize=11, shape=box, style="filled,rounded", penwidth=1.4];
+  edge [fontname="Helvetica", fontsize=10, color="#555555"];
+
+  subgraph cluster_llm {
+    label="LLM OWNS (inferred from data — NO hardcoded rules)";
+    fontname="Helvetica-Bold"; fontsize=13; color="#C2185B"; style="rounded"; bgcolor="#FCE4EC";
+    d1 [label="Should we send?", fillcolor="white", color="#C2185B"];
+    d2 [label="Which channel?\n(sms / email / voice)", fillcolor="white", color="#C2185B"];
+    d3 [label="When? (send_at)", fillcolor="white", color="#C2185B"];
+    d4 [label="What to say?\n(subject + body)", fillcolor="white", color="#C2185B"];
+    d5 [label="Next action\n(cadence / follow-up)", fillcolor="white", color="#C2185B"];
+  }
+
+  subgraph cluster_code {
+    label="CODE ENFORCES (deterministic compliance only)";
+    fontname="Helvetica-Bold"; fontsize=13; color="#558B2F"; style="rounded"; bgcolor="#F1F8E9";
+    c1 [label="Consent / TCPA gate\n(block unconsented)", fillcolor="white", color="#558B2F"];
+    c2 [label="Quiet-hours window\n8am–9pm local", fillcolor="white", color="#558B2F"];
+    c3 [label="PII tokenization +\noutput-leak quarantine", fillcolor="white", color="#558B2F"];
+    c4 [label="Fair-housing /\ninjection scan", fillcolor="white", color="#558B2F"];
+    c5 [label="Tenant & portfolio\nisolation quarantine", fillcolor="white", color="#558B2F"];
+    c6 [label="Schema repair /\nretry → safe abort", fillcolor="white", color="#558B2F"];
+  }
+
+  facts [label="FACTS fed to the model\n(interests, brand voice, legal footer,\nasset-class, allowed channels,\nscreening metadata)", shape=note, fillcolor="#FFF8E1", style="filled", color="#F9A825"];
+  out [label="Validated, compliant\noutput  (or safe no-send)", shape=box, style="filled,rounded", fillcolor="#E8F5E9", color="#2E7D32", penwidth=2];
+
+  facts -> d1 [style=dashed, color="#F9A825"];
+  d1 -> c1 [label="proposal"];
+  d2 -> c1;
+  d3 -> c2;
+  d4 -> c3;
+  d4 -> c4;
+  d4 -> c5;
+  d5 -> c6;
+  c1 -> out; c2 -> out; c3 -> out; c4 -> out; c5 -> out; c6 -> out;
+}

@@ -1,0 +1,46 @@
+digraph agent_flow {
+    rankdir=TB;
+    fontname="Helvetica";
+    labelloc="t";
+    label="Context-Aware Messaging Agent — End-to-End Flow (LangGraph)";
+    node [fontname="Helvetica", fontsize=11, style="filled,rounded", shape=box];
+    edge [fontname="Helvetica", fontsize=9];
+
+    start   [label="INPUT RECORD\n(JSONL: profile, consent,\nchannel_preferences, context)", shape=oval, fillcolor="#e3f2fd"];
+
+    intake  [label="1. INTAKE\nparse + validate schema\ncheck consent exists", fillcolor="#fff3e0"];
+    safety  [label="2. SAFETY\nscan untrusted fields for\ninjection / jailbreak / toxic", fillcolor="#fff3e0"];
+    sanitize[label="3. SANITIZE\nstrip unsafe content, keep\nsafe personalization data", fillcolor="#fff3e0"];
+    context [label="4. CONTEXT (RAG-like)\n• derive FACTS (allowed_channels,\n  tz, dates, brand, interests)\n• PII-tokenize\n• rank few-shot examples\n  + canonical fallback\n• build system + user prompt", fillcolor="#e8f5e9"];
+    llm     [label="5. LLM  (the only decision-maker)\ndecides: should_send? channel?\nsend_at? body? next_action?\ntemp=0, JSON, shared time budget", fillcolor="#e1bee7"];
+    parse   [label="6. PARSE + COMPLIANCE REPAIR\nextract JSON, validate schema,\nre-impose LEGAL guardrails only\n(consent veto, opt-out, footer,\nPII, fair-housing)", fillcolor="#e8f5e9"];
+    evaluate[label="7. EVALUATE\nrun 23 acceptance criteria\n(incl. AC-23 next_action match)", fillcolor="#e8f5e9"];
+    emit    [label="8. EMIT\nassemble final SUCCESS output\n(message + next_action + scores)", fillcolor="#c8e6c9"];
+    abort   [label="ABORT\nsafe NO-SEND output\n+ reasoning", fillcolor="#ffcdd2"];
+
+    done    [label="FINAL OUTPUT\n{should_send, next_message,\nnext_action, evaluation}", shape=oval, fillcolor="#e3f2fd"];
+
+    start -> intake;
+
+    intake  -> safety   [label="ok"];
+    intake  -> abort    [label="no_consent / bad_record", color="#c62828", fontcolor="#c62828"];
+
+    safety  -> context  [label="clean"];
+    safety  -> sanitize [label="sanitizable"];
+    safety  -> abort    [label="block (unsafe)", color="#c62828", fontcolor="#c62828"];
+
+    sanitize -> context;
+    context  -> llm;
+
+    llm     -> parse    [label="output produced"];
+    llm     -> abort    [label="timeout / budget /\nAPI error", color="#c62828", fontcolor="#c62828"];
+
+    parse   -> evaluate [label="success"];
+    parse   -> llm      [label="malformed → RETRY\n(self-correct, until\nMAX_RETRIES or budget)", color="#ef6c00", fontcolor="#ef6c00", style=dashed];
+
+    evaluate -> emit;
+    emit    -> done;
+    abort   -> done;
+
+    {rank=same; emit; abort;}
+}

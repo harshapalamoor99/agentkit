@@ -22,7 +22,19 @@ from .. import cost as _cost
 from ..llm_client import LLMClient
 from ..state import MessagingAgentState
 
-_client = LLMClient()
+
+def _make_client():
+    """Select the LLM client. When ``AGENTKIT_MOCK_LLM`` is truthy, use the deterministic
+    offline reference client (no network/key) — used by the CI eval smoke test and offline
+    demos. Otherwise use the real provider-agnostic client."""
+    import os
+    if os.getenv("AGENTKIT_MOCK_LLM", "").lower() in ("1", "true", "yes"):
+        from ..mock_llm import MockLLMClient
+        return MockLLMClient()
+    return LLMClient()
+
+
+_client = _make_client()
 
 
 def _breaker_for(state: MessagingAgentState):

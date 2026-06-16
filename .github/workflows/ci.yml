@@ -44,8 +44,10 @@ jobs:
       - name: Eval harness smoke test
         env:
           PYTHONPATH: src
+          AGENTKIT_MOCK_LLM: "1"
         run: |
-          # Runs the full agent over the RAG eval set offline (mock LLM); asserts the
-          # report is produced and RAG recall is scored. Proves the pipeline is runnable
-          # end-to-end in CI without any provider key.
+          # Runs the full agent over the RAG eval set offline using the deterministic
+          # mock LLM (AGENTKIT_MOCK_LLM=1); asserts the report is produced and RAG recall
+          # is scored. Proves the pipeline is runnable end-to-end in CI without any
+          # provider key.
           python -m agentkit.evals.cli data/evals/rag_knowledge.jsonl

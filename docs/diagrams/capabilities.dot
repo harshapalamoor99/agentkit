@@ -1,0 +1,49 @@
+digraph capabilities {
+  rankdir=TB;
+  bgcolor="white";
+  labelloc="t";
+  fontname="Helvetica-Bold";
+  fontsize=20;
+  label="Capability Layer — opt-in, dependency-light, graceful by default";
+  node [fontname="Helvetica", fontsize=11, shape=box, style="filled,rounded", penwidth=1.4];
+  edge [fontname="Helvetica", fontsize=10, color="#555555"];
+
+  core [label="Compiled LangGraph + active Domain", fillcolor="#E3F2FD", color="#1565C0", penwidth=2];
+
+  subgraph cluster_know {
+    label="KNOWLEDGE / RAG (before the LLM call)";
+    fontname="Helvetica-Bold"; fontsize=12; color="#00838F"; style="rounded"; bgcolor="#E0F7FA";
+    kb [label="KnowledgeBase.retrieve(query, k, where)\nInMemory TF-IDF default · vector DB pluggable", fillcolor="white", color="#00838F"];
+    ground [label="top-k snippets injected as grounding\n+ recorded in lineage / telemetry", fillcolor="white", color="#00838F"];
+    kb -> ground;
+  }
+
+  subgraph cluster_multi {
+    label="MULTI-AGENT SURFACE";
+    fontname="Helvetica-Bold"; fontsize=12; color="#6A1B9A"; style="rounded"; bgcolor="#F3E5F5";
+    router [label="AgentRouter\n(field / classifier / default)", fillcolor="white", color="#6A1B9A"];
+    svc [label="AgentService.as_tool()\nGET /api/agents · POST /api/dispatch", fillcolor="white", color="#6A1B9A"];
+    router -> svc;
+  }
+
+  subgraph cluster_eval {
+    label="EVALUATION (one scorer set, two runners)";
+    fontname="Helvetica-Bold"; fontsize=12; color="#558B2F"; style="rounded"; bgcolor="#F1F8E9";
+    offline [label="offline harness\nRAG recall · domain_metrics · LLM-judge", fillcolor="white", color="#558B2F"];
+    ls [label="LangSmith experiment\nsame scorers · trace-linked · version diff", fillcolor="white", color="#558B2F"];
+    offline -> ls [label="--langsmith", style=dashed];
+  }
+
+  subgraph cluster_obs {
+    label="OBSERVABILITY";
+    fontname="Helvetica-Bold"; fontsize=12; color="#E65100"; style="rounded"; bgcolor="#FFF3E0";
+    otel [label="OpenTelemetry span per node\n(opt-in MESSAGING_AGENT_TRACING; no-op otherwise)", fillcolor="white", color="#E65100"];
+    cost [label="token → USD cost\nsummed across retries → output[\"cost\"]", fillcolor="white", color="#E65100"];
+    otel -> cost;
+  }
+
+  core -> kb     [label="context node"];
+  core -> router [label="dispatch"];
+  core -> offline [label="scored by"];
+  core -> otel   [label="instrumented by"];
+}

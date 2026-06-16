@@ -88,6 +88,8 @@ which record fields become "facts", the channel/consent model, output compliance
 and the acceptance criteria — lives behind one interface,
 [`messaging_agent.domain.Domain`](src/messaging_agent/domain.py).
 
+![Reusability seam: one domain-agnostic engine, pluggable Domain plugins](docs/diagrams/domain-plugin.png)
+
 To reuse the engine for a new use case you implement a `Domain` subclass and register it
 — **no change to the core graph, nodes, LLM client or prod layer**:
 
@@ -113,6 +115,8 @@ second, unrelated example driven through the *same* compiled graph
 📖 Full walkthrough: [`docs/AUTHORING_A_DOMAIN.md`](docs/AUTHORING_A_DOMAIN.md).
 
 ### Knowledge / RAG, multi-agent, and domain-aware evals
+
+![Capability layer: RAG, multi-agent, evals, observability](docs/diagrams/capabilities.png)
 
 The engine ships three reusable, dependency-light capabilities (all opt-in, all degrade
 gracefully):
@@ -147,13 +151,18 @@ gracefully):
 
 ## Architecture
 
+![LangGraph pipeline — node/edge flow with retry and safe-abort paths](docs/diagrams/pipeline.png)
+
 > **Diagrams** (PNG, source `.dot` in [`docs/diagrams/`](docs/diagrams), render with
 > `dot -Tpng -Gdpi=150 <file>.dot -o <file>.png`):
 >
 > | Diagram | What it shows |
 > |---------|---------------|
 > | [`pipeline.png`](docs/diagrams/pipeline.png) | LangGraph node/edge flow incl. retry + safe-abort paths |
+> | [`domain-plugin.png`](docs/diagrams/domain-plugin.png) | The reusability seam: domain-agnostic engine vs pluggable `Domain` plugins |
+> | [`capabilities.png`](docs/diagrams/capabilities.png) | Opt-in capability layer: RAG, multi-agent, evals, observability/cost |
 > | [`decision-boundary.png`](docs/diagrams/decision-boundary.png) | What the **LLM decides** vs what **code enforces** |
+> | [`context-zoom.png`](docs/diagrams/context-zoom.png) | Inside the `context` node — how the grounded prompt is built |
 > | [`enterprise-architecture.png`](docs/diagrams/enterprise-architecture.png) | Production architecture + RealPage RP-01..15 capability map |
 > | [`latency-budget.png`](docs/diagrams/latency-budget.png) | Per-stage timing + the abort-on-deadline p99 < 2s guarantee |
 
@@ -182,6 +191,9 @@ is a plain function, the graph supports **retry-with-state** (only the failed `l
 node loops), and every node's I/O is automatically traceable via LangSmith callbacks.
 
 ### Decision boundary (LLM-only; code only for compliance)
+
+![Decision boundary — the LLM decides, code only enforces compliance](docs/diagrams/decision-boundary.png)
+
 - **LLM decides** (learned from data + few-shot examples): whether to send, the
   **channel**, the **send time**, the subject/body/CTA copy, and the **next_action**
   (`start_cadence` vs `follow_up_in_days`). The agent is given *facts* (the consented
@@ -284,6 +296,8 @@ Override the model with `MESSAGING_AGENT_MODEL=...`.
 ---
 
 ## Enterprise / production-grade matrix (RealPage RP-01 .. RP-15)
+
+![Production architecture and RealPage RP-01..15 enterprise capability matrix](docs/diagrams/enterprise-architecture.png)
 
 Beyond the 22 functional ACs, the agent implements the full RealPage production
 acceptance matrix. The **LLM still owns every decision** — these additions only feed
@@ -432,6 +446,8 @@ LLM_REASONING_EFFORT=none               # disable Gemini "thinking" tokens
 ```
 
 ### Latency: the 2s SLA is bounded *by construction*
+
+![Latency budget — per-stage timing and the abort-on-deadline p99 < 2s guarantee](docs/diagrams/latency-budget.png)
 
 The pipeline enforces a **shared per-request time budget** (`TOTAL_LLM_BUDGET_S`,
 default 1.8s) that spans *all* LLM attempts including the retry loop — each attempt

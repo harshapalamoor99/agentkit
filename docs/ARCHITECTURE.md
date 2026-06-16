@@ -32,6 +32,18 @@ intake ──┬─ ok ───────► safety ──┬─ clean ──
 Each node is a pure `state -> state` function, independently unit-tested. LangGraph
 supplies orchestration, conditional routing, and retry-with-state.
 
+![LangGraph pipeline — node/edge flow with retry and safe-abort paths](diagrams/pipeline.png)
+
+The reusability seam (ADR-005) and the opt-in capability layer (RAG, multi-agent, evals,
+observability) are summarized in two further diagrams:
+
+| Diagram | Shows |
+|---------|-------|
+| ![Reusability seam](diagrams/domain-plugin.png) | Domain-agnostic engine vs pluggable `Domain` plugins |
+| ![Capability layer](diagrams/capabilities.png) | RAG, multi-agent, dual-runner evals, observability/cost |
+
+Full diagram set (PNG + `.dot`/`.mmd` source): [`docs/diagrams/`](diagrams).
+
 ---
 
 ## 2. Core design decisions

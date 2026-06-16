@@ -1,0 +1,41 @@
+digraph domain_plugin {
+  rankdir=LR;
+  bgcolor="white";
+  labelloc="t";
+  fontname="Helvetica-Bold";
+  fontsize=20;
+  label="Reusability Seam — one domain-agnostic engine, pluggable Domain plugins";
+  node [fontname="Helvetica", fontsize=11, shape=box, style="filled,rounded", penwidth=1.4];
+  edge [fontname="Helvetica", fontsize=10, color="#555555"];
+
+  subgraph cluster_core {
+    label="DOMAIN-AGNOSTIC ENGINE (never changes per use case)";
+    fontname="Helvetica-Bold"; fontsize=13; color="#1565C0"; style="rounded"; bgcolor="#E3F2FD";
+    g  [label="LangGraph pipeline\n(intake → safety → context →\nllm → parse → evaluate → emit)", fillcolor="white", color="#1565C0"];
+    llm [label="Provider-agnostic LLM client\n(openai / anthropic / azure /\ngemini / litellm)", fillcolor="white", color="#1565C0"];
+    safe [label="Safety / PII / injection layer", fillcolor="white", color="#1565C0"];
+    prod [label="prod/ scaling stack\n(batching, retry, runner, tracing)", fillcolor="white", color="#1565C0"];
+  }
+
+  iface [label="messaging_agent.domain.Domain\n(ABC + registry)\n\nchannel_consent_map()\nbuild_decision_context()\nnormalize()\nevaluate_all()\nknowledge_base()  ·  judge_system_prompt()", shape=note, fillcolor="#FFF8E1", style="filled", color="#F9A825", penwidth=2];
+
+  subgraph cluster_domains {
+    label="PLUGGABLE DOMAINS (the only use-case-specific code)";
+    fontname="Helvetica-Bold"; fontsize=13; color="#6A1B9A"; style="rounded"; bgcolor="#F3E5F5";
+    leasing [label="leasing (default)\noriginal housing agent", fillcolor="white", color="#6A1B9A"];
+    support [label="support\nunrelated 2nd example", fillcolor="white", color="#6A1B9A"];
+    yours   [label="your_domain\nimplement + register_domain()", fillcolor="white", color="#6A1B9A", style="filled,rounded,dashed"];
+  }
+
+  sel [label="Domain selection\nrecord[\"domain\"]  →  AGENT_DOMAIN env  →  default", shape=box, style="filled,rounded", fillcolor="#E8F5E9", color="#2E7D32", penwidth=2];
+
+  g -> iface [label="delegates use-case work", color="#1565C0"];
+  iface -> leasing [style=dashed, color="#6A1B9A"];
+  iface -> support [style=dashed, color="#6A1B9A"];
+  iface -> yours   [style=dashed, color="#6A1B9A"];
+  sel -> iface [label="resolves active domain", color="#2E7D32"];
+
+  llm -> g [style=invis];
+  safe -> g [style=invis];
+  prod -> g [style=invis];
+}
